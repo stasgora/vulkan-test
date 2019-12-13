@@ -11,7 +11,7 @@ void SwapChain::createSwapChain(SwapChainSupportDetails &swapChainSupport, Queue
 	}
 	swapChainImages = device.getSwapchainImagesKHR(swapChain);
 	swapChainFormat = createInfo.imageFormat;
-	createImageViews();
+	createImageViews(device);
 }
 
 SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices& indices, SurfaceKHR surface) {
@@ -38,7 +38,19 @@ SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(SwapChainSupportDetails &s
 	return createInfo;
 }
 
-void SwapChain::createImageViews() {
+void SwapChain::createImageViews(Device &device) {
+	swapChainImageViews.reserve(swapChainImages.size());
+	for (int i = 0; i < swapChainImages.size(); ++i) {
+		ImageViewCreateInfo createInfo(ImageViewCreateFlags(), swapChainImages[i], ImageViewType::e2D, swapChainFormat);
+		createInfo.subresourceRange.aspectMask = ImageAspectFlagBits::eColor;
+		createInfo.subresourceRange.levelCount = 1;
+		createInfo.subresourceRange.layerCount = 1;
+		try {
+			swapChainImageViews.push_back(device.createImageView(createInfo));
+		} catch (vk::SystemError &err) {
+			throw std::runtime_error("failed to create image views!");
+		}
+	}
 }
 
 SurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR> &availableFormats) {
@@ -63,4 +75,10 @@ Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities)
 	actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
 	actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
 	return actualExtent;
+}
+
+void SwapChain::cleanup(Device &device) {
+	for (const auto &imageView : swapChainImageViews)
+		device.destroyImageView(imageView);
+	device.destroySwapchainKHR(swapChain);
 }

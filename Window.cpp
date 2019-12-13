@@ -61,7 +61,7 @@ void Window::loop() {
 }
 
 void Window::cleanup() {
-	deviceManager.device->destroySwapchainKHR(swapChain.swapChain);
+	swapChain.cleanup(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);

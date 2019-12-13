@@ -9,10 +9,11 @@ using namespace vk;
 class SwapChain {
 public:
 	void createSwapChain(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &queueFamilyIndices, Device &device, SurfaceKHR surface);
+	void cleanup(Device &device);
 
 	SwapchainKHR swapChain;
 private:
-	void createImageViews();
+	void createImageViews(Device &device);
 	SwapchainCreateInfoKHR createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &indices, SurfaceKHR surface);
 
 	SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR>& availableFormats);
