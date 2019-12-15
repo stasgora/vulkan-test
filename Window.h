@@ -9,6 +9,7 @@
 #include "components/SwapChain.h"
 #include "rendering/GraphicsPipeline.h"
 #include "rendering/GraphicsCommandBuffer.h"
+#include "rendering/GraphicsRenderer.h"
 
 using namespace vk;
 
@@ -35,7 +36,8 @@ private:
 	SurfaceKHR surface;
 
 	GraphicsPipeline pipeline;
-	GraphicsCommandBuffer commandPool;
+	GraphicsCommandBuffer commandBuffer;
+	GraphicsRenderer renderer;
 
 	GPUDeviceManager deviceManager;
 	SwapChain swapChain;

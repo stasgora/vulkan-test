@@ -18,6 +18,8 @@ public:
 
 	SwapChainSupportDetails swapChainSupport;
 	QueueFamilyIndices queueFamilyIndices;
+	Queue graphicsQueue;
+	Queue presentQueue;
 private:
 	void pickPhysicalDevice(Instance &instance, SurfaceKHR surface);
 	void createLogicalDevice(SurfaceKHR surface);
@@ -28,8 +30,6 @@ private:
 	static QueueFamilyIndices findQueueFamilies(PhysicalDevice device, SurfaceKHR surface);
 
 	PhysicalDevice physicalDevice;
-	Queue graphicsQueue;
-	Queue presentQueue;
 };
 
 

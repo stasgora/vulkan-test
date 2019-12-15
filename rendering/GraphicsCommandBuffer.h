@@ -13,10 +13,10 @@ public:
 	void setupCommandPool(Device &device, QueueFamilyIndices &indices, SwapChain &swapChain, GraphicsPipeline &pipeline);
 	void cleanup(Device &device);
 
+	std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> commandBuffers;
 private:
 	void createCommandPool(Device &device, QueueFamilyIndices &indices, std::vector<Framebuffer> &frameBuffers);
 	CommandPool commandPool;
-	std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> commandBuffers;
 };
 
 

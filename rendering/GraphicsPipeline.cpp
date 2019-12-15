@@ -31,7 +31,9 @@ void GraphicsPipeline::createRenderPass(Device &device, Format &format) {
 	subpass.pipelineBindPoint = PipelineBindPoint::eGraphics;
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &colorAttachmentRef;
-	RenderPassCreateInfo renderPassInfo(RenderPassCreateFlags(), 1, &colorAttachment, 1, &subpass);
+	SubpassDependency dependency(VK_SUBPASS_EXTERNAL, 0, PipelineStageFlagBits::eColorAttachmentOutput, PipelineStageFlagBits::eColorAttachmentOutput,
+	                             AccessFlags(), AccessFlagBits::eColorAttachmentRead | AccessFlagBits::eColorAttachmentWrite);
+	RenderPassCreateInfo renderPassInfo(RenderPassCreateFlags(), 1, &colorAttachment, 1, &subpass, 1, &dependency);
 	try {
 		renderPass = device.createRenderPass(renderPassInfo);
 	} catch (vk::SystemError &err) {
