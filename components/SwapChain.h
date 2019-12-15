@@ -11,8 +11,8 @@ public:
 	void createSwapChain(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &queueFamilyIndices, Device &device, SurfaceKHR surface);
 	void cleanup(Device &device);
 
-	SwapchainKHR swapChain;
 	Extent2D swapChainExtent;
+	Format swapChainFormat;
 private:
 	void createImageViews(Device &device);
 	SwapchainCreateInfoKHR createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &indices, SurfaceKHR surface);
@@ -21,9 +21,9 @@ private:
 	PresentModeKHR choosePresentMode(const std::vector<PresentModeKHR>& availablePresentModes);
 	Extent2D chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities);
 
+	SwapchainKHR swapChain;
 	std::vector<Image> swapChainImages;
 	std::vector<ImageView> swapChainImageViews;
-	Format swapChainFormat;
 };
 
 
