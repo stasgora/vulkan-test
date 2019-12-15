@@ -10,8 +10,12 @@ using namespace vk;
 class GraphicsPipeline {
 public:
 	void setupPipeline(Device &device, Extent2D &extent, Format &format);
+	void createFramebuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews);
 	void cleanup(Device &device);
 
+	std::vector<Framebuffer> swapChainFramebuffers;
+	RenderPass renderPass;
+	Pipeline graphicsPipeline;
 private:
 	void createRenderPass(Device &device, Format &format);
 	void createGraphicsPipeline(Device &device, Extent2D &extent);
@@ -19,9 +23,7 @@ private:
 	static UniqueShaderModule createShaderModule(const std::vector<char> &code, Device &device);
 	static std::vector<char> readFile(const std::string &fileName);
 
-	Pipeline graphicsPipeline;
 	PipelineLayout pipelineLayout;
-	RenderPass renderPass;
 };
 
 #endif //TEST_GRAPHICSPIPELINE_H

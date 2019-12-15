@@ -7,7 +7,8 @@
 #include "components/DebugLayer.h"
 #include "components/GPUDeviceManager.h"
 #include "components/SwapChain.h"
-#include "pipeline/GraphicsPipeline.h"
+#include "rendering/GraphicsPipeline.h"
+#include "rendering/GraphicsCommandBuffer.h"
 
 using namespace vk;
 
@@ -34,9 +35,11 @@ private:
 	SurfaceKHR surface;
 
 	GraphicsPipeline pipeline;
-	DebugLayer debugLayer;
+	GraphicsCommandBuffer commandPool;
+
 	GPUDeviceManager deviceManager;
 	SwapChain swapChain;
+	DebugLayer debugLayer;
 };
 
 

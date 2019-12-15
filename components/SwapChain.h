@@ -13,6 +13,7 @@ public:
 
 	Extent2D swapChainExtent;
 	Format swapChainFormat;
+	std::vector<ImageView> swapChainImageViews;
 private:
 	void createImageViews(Device &device);
 	SwapchainCreateInfoKHR createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &indices, SurfaceKHR surface);
@@ -23,7 +24,6 @@ private:
 
 	SwapchainKHR swapChain;
 	std::vector<Image> swapChainImages;
-	std::vector<ImageView> swapChainImageViews;
 };
 
 

@@ -1,6 +1,19 @@
 #include "GraphicsPipeline.h"
 #include <fstream>
 
+void GraphicsPipeline::createFramebuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews) {
+	swapChainFramebuffers.resize(imageViews.size());
+	for (int i = 0; i < imageViews.size(); ++i) {
+		ImageView attachments[] = {imageViews[i]};
+		FramebufferCreateInfo framebufferInfo(FramebufferCreateFlags(), renderPass, 1, attachments, extent.width, extent.height, 1);
+		try {
+			swapChainFramebuffers[i] = device.createFramebuffer(framebufferInfo);
+		} catch (vk::SystemError &err) {
+			throw std::runtime_error("failed to create framebuffer!");
+		}
+	}
+}
+
 void GraphicsPipeline::setupPipeline(Device &device, Extent2D &extent, Format &format) {
 	createRenderPass(device, format);
 	createGraphicsPipeline(device, extent);
@@ -88,6 +101,8 @@ UniqueShaderModule GraphicsPipeline::createShaderModule(const std::vector<char> 
 }
 
 void GraphicsPipeline::cleanup(Device &device) {
+	for (const auto &buffer : swapChainFramebuffers)
+		device.destroyFramebuffer(buffer);
 	device.destroyPipeline(graphicsPipeline);
 	device.destroyPipelineLayout(pipelineLayout);
 	device.destroyRenderPass(renderPass);
