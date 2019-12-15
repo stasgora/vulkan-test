@@ -2,7 +2,7 @@
 #define TEST_SWAPCHAIN_H
 
 #include <vulkan/vulkan.hpp>
-#include "structs.h"
+#include "ComponentStructs.h"
 
 using namespace vk;
 
@@ -12,6 +12,7 @@ public:
 	void cleanup(Device &device);
 
 	SwapchainKHR swapChain;
+	Extent2D swapChainExtent;
 private:
 	void createImageViews(Device &device);
 	SwapchainCreateInfoKHR createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &indices, SurfaceKHR surface);
@@ -23,7 +24,6 @@ private:
 	std::vector<Image> swapChainImages;
 	std::vector<ImageView> swapChainImageViews;
 	Format swapChainFormat;
-	Extent2D swapChainExtent;
 };
 
 

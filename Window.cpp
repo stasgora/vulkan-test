@@ -21,6 +21,7 @@ void Window::init() {
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
 	swapChain.createSwapChain(deviceManager.swapChainSupport, deviceManager.queueFamilyIndices, *deviceManager.device, surface);
+	pipeline.createGraphicsPipeline(*deviceManager.device, swapChain.swapChainExtent);
 }
 
 void Window::createSurface() {

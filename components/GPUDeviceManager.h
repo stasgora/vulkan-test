@@ -2,7 +2,7 @@
 #define TEST_GPUDEVICEMANAGER_H
 
 #include <vulkan/vulkan.hpp>
-#include "structs.h"
+#include "ComponentStructs.h"
 
 using namespace vk;
 

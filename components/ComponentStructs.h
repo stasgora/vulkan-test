@@ -1,5 +1,5 @@
-#ifndef TEST_STRUCTS_H
-#define TEST_STRUCTS_H
+#ifndef TEST_COMPONENTSTRUCTS_H
+#define TEST_COMPONENTSTRUCTS_H
 
 #include <optional>
 #include <vector>
@@ -20,4 +20,4 @@ struct SwapChainSupportDetails {
 	std::vector<vk::PresentModeKHR> presentModes;
 };
 
-#endif //TEST_STRUCTS_H
+#endif //TEST_COMPONENTSTRUCTS_H

@@ -7,6 +7,7 @@
 #include "components/DebugLayer.h"
 #include "components/GPUDeviceManager.h"
 #include "components/SwapChain.h"
+#include "pipeline/GraphicsPipeline.h"
 
 using namespace vk;
 
@@ -32,6 +33,7 @@ private:
 	UniqueInstance instance;
 	SurfaceKHR surface;
 
+	GraphicsPipeline pipeline;
 	DebugLayer debugLayer;
 	GPUDeviceManager deviceManager;
 	SwapChain swapChain;
