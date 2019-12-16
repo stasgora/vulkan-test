@@ -44,3 +44,7 @@ void GraphicsCommandBuffer::createCommandPool(Device &device, QueueFamilyIndices
 void GraphicsCommandBuffer::cleanup(Device &device) {
 	device.destroyCommandPool(commandPool);
 }
+
+void GraphicsCommandBuffer::clearBuffers(Device &device) {
+	device.freeCommandBuffers(commandPool, commandBuffers);
+}

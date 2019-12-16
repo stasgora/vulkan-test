@@ -12,6 +12,7 @@ class GraphicsCommandBuffer {
 public:
 	void setupCommandBuffer(Device &device, QueueFamilyIndices &indices, SwapChain &swapChain, GraphicsPipeline &pipeline);
 	void cleanup(Device &device);
+	void clearBuffers(Device &device);
 
 	std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> commandBuffers;
 private:

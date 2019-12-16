@@ -3,12 +3,13 @@
 
 #include <vulkan/vulkan.hpp>
 #include "ComponentStructs.h"
+#include "GPUDeviceManager.h"
 
 using namespace vk;
 
 class SwapChain {
 public:
-	void createSwapChain(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &queueFamilyIndices, Device &device, SurfaceKHR surface);
+	void createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surface, WindowSize size);
 	void cleanup(Device &device);
 
 	SwapchainKHR swapChain;
@@ -22,7 +23,7 @@ private:
 
 	SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR>& availableFormats);
 	PresentModeKHR choosePresentMode(const std::vector<PresentModeKHR>& availablePresentModes);
-	Extent2D chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities);
+	Extent2D chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, WindowSize size);
 };
 
 

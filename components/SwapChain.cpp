@@ -1,9 +1,10 @@
 #include "SwapChain.h"
 #include "../Window.h"
 
-void SwapChain::createSwapChain(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &indices, Device &device, SurfaceKHR surface) {
-	swapChainExtent = chooseSwapExtent(swapChainSupport.capabilities);
-	SwapchainCreateInfoKHR createInfo = createSwapChainInfo(swapChainSupport, indices, surface);
+void SwapChain::createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surface, WindowSize size) {
+	swapChainExtent = chooseSwapExtent(deviceManager.swapChainSupport.capabilities, size);
+	SwapchainCreateInfoKHR createInfo = createSwapChainInfo(deviceManager.swapChainSupport, deviceManager.queueFamilyIndices, surface);
+	Device device = *deviceManager.device;
 	try {
 		swapChain = device.createSwapchainKHR(createInfo);
 	} catch (vk::SystemError &err) {
@@ -68,10 +69,10 @@ PresentModeKHR SwapChain::choosePresentMode(const std::vector<PresentModeKHR> &a
 	return bestMode;
 }
 
-Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities) {
+Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, WindowSize size) {
 	if (capabilities.currentExtent.width != UINT32_MAX)
 		return capabilities.currentExtent;
-	Extent2D actualExtent = {WIDTH, HEIGHT};
+	Extent2D actualExtent = {static_cast<uint32_t>(size.width), static_cast<uint32_t>(size.height)};
 	actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
 	actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
 	return actualExtent;

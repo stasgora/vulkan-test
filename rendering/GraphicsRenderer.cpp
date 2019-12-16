@@ -22,7 +22,12 @@ void GraphicsRenderer::drawFrame(Device &device, SwapChain &swapChain, std::vect
 	device.waitForFences(1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
-	device.acquireNextImageKHR(swapChain.swapChain, UINT32_MAX, imageAvailableSemaphores[currentFrame], nullptr, &imageIndex);
+	Result result = device.acquireNextImageKHR(swapChain.swapChain, UINT32_MAX, imageAvailableSemaphores[currentFrame], nullptr, &imageIndex);
+	if(result == Result::eErrorOutOfDateKHR) {
+
+		return;
+	} else if (result != Result::eSuccess && result != Result::eSuboptimalKHR)
+		throw std::runtime_error("failed to acquire swap chain image!");
 	if (imagesInFlight[imageIndex] >= 0)
 		device.waitForFences(1, &inFlightFences[imagesInFlight[imageIndex]], VK_TRUE, UINT64_MAX);
 	imagesInFlight[imageIndex] = currentFrame;

@@ -20,11 +20,21 @@ void Window::init() {
 	debugLayer.init(*instance);
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
-	swapChain.createSwapChain(deviceManager.swapChainSupport, deviceManager.queueFamilyIndices, *deviceManager.device, surface);
-	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
-	pipeline.createFramebuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
-	commandBuffer.setupCommandBuffer(*deviceManager.device, deviceManager.queueFamilyIndices, swapChain, pipeline);
+	setupWindow();
 	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
+}
+
+void Window::setupWindow(bool firstTime) {
+	if(!firstTime) {
+		deviceManager.device->waitIdle(); //TODO pass old swap chain to the new instead of waiting here
+		cleanupWindow();
+	}
+	WindowSize size;
+	glfwGetFramebufferSize(window, &size.width, &size.height);
+	swapChain.createSwapChain(deviceManager, surface, size);
+	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
+	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
+	commandBuffer.setupCommandBuffer(*deviceManager.device, deviceManager.queueFamilyIndices, swapChain, pipeline);
 }
 
 void Window::createSurface() {
@@ -69,14 +79,22 @@ void Window::loop() {
 }
 
 void Window::cleanup() {
+	cleanupWindow();
+
 	renderer.cleanup(*deviceManager.device);
 	commandBuffer.cleanup(*deviceManager.device);
-	pipeline.cleanup(*deviceManager.device);
-	swapChain.cleanup(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);
 	glfwTerminate();
+}
+
+void Window::cleanupWindow() {
+	deviceManager.device->waitIdle();
+
+	pipeline.cleanup(*deviceManager.device);
+	commandBuffer.clearBuffers(*deviceManager.device);
+	swapChain.cleanup(*deviceManager.device);
 }
 
 void Window::getRequiredExtensions(vector<const char *>& extensions) {

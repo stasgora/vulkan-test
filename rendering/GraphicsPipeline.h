@@ -10,7 +10,7 @@ using namespace vk;
 class GraphicsPipeline {
 public:
 	void setupPipeline(Device &device, Extent2D &extent, Format &format);
-	void createFramebuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews);
+	void createFrameBuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews);
 	void cleanup(Device &device);
 
 	std::vector<Framebuffer> swapChainFramebuffers;

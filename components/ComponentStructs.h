@@ -20,4 +20,8 @@ struct SwapChainSupportDetails {
 	std::vector<vk::PresentModeKHR> presentModes;
 };
 
+struct WindowSize {
+	int width, height;
+};
+
 #endif //TEST_COMPONENTSTRUCTS_H

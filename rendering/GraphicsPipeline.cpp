@@ -1,7 +1,7 @@
 #include "GraphicsPipeline.h"
 #include <fstream>
 
-void GraphicsPipeline::createFramebuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews) {
+void GraphicsPipeline::createFrameBuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews) {
 	swapChainFramebuffers.resize(imageViews.size());
 	for (int i = 0; i < imageViews.size(); ++i) {
 		ImageView attachments[] = {imageViews[i]};

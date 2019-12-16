@@ -23,12 +23,14 @@ public:
 
 private:
 	void init();
+	void setupWindow(bool firstTime = true);
 	void createInstance();
 	void createSurface();
 
 	static void getRequiredExtensions(std::vector<const char *>& extensions);
 
 	void loop();
+	void cleanupWindow();
 	void cleanup();
 
 	GLFWwindow* window;
