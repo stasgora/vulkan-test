@@ -23,8 +23,8 @@ void Window::init() {
 	swapChain.createSwapChain(deviceManager.swapChainSupport, deviceManager.queueFamilyIndices, *deviceManager.device, surface);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFramebuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
-	commandBuffer.setupCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices, swapChain, pipeline);
-	renderer.setupRendering(*deviceManager.device);
+	commandBuffer.setupCommandBuffer(*deviceManager.device, deviceManager.queueFamilyIndices, swapChain, pipeline);
+	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
 }
 
 void Window::createSurface() {
@@ -41,7 +41,8 @@ void Window::createInstance() {
 	ApplicationInfo appInfo("Test", VK_MAKE_VERSION(1, 0, 0),
 			"None", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
 
-	auto extensions = getRequiredExtensions();
+	vector<const char *> extensions;
+	getRequiredExtensions(extensions);
 	auto createInfo = InstanceCreateInfo(InstanceCreateFlags(), &appInfo, 0,
 			nullptr, static_cast<uint32_t>(extensions.size()), extensions.data());
 
@@ -64,6 +65,7 @@ void Window::loop() {
 		glfwPollEvents();
 		renderer.drawFrame(*deviceManager.device, swapChain, commandBuffer.commandBuffers, deviceManager);
 	}
+	deviceManager.device->waitIdle();
 }
 
 void Window::cleanup() {
@@ -77,14 +79,12 @@ void Window::cleanup() {
 	glfwTerminate();
 }
 
-vector<const char *> Window::getRequiredExtensions() {
+void Window::getRequiredExtensions(vector<const char *>& extensions) {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions;
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-	vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+	extensions.assign(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
 	if (enableValidationLayers)
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-	return extensions;
 }

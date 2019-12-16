@@ -10,7 +10,7 @@ using namespace vk;
 
 class GraphicsCommandBuffer {
 public:
-	void setupCommandPool(Device &device, QueueFamilyIndices &indices, SwapChain &swapChain, GraphicsPipeline &pipeline);
+	void setupCommandBuffer(Device &device, QueueFamilyIndices &indices, SwapChain &swapChain, GraphicsPipeline &pipeline);
 	void cleanup(Device &device);
 
 	std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> commandBuffers;

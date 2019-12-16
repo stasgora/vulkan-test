@@ -1,7 +1,7 @@
 #include "GraphicsCommandBuffer.h"
 #include "../components/ComponentStructs.h"
 
-void GraphicsCommandBuffer::setupCommandPool(Device &device, QueueFamilyIndices &indices, SwapChain &swapChain, GraphicsPipeline &pipeline) {
+void GraphicsCommandBuffer::setupCommandBuffer(Device &device, QueueFamilyIndices &indices, SwapChain &swapChain, GraphicsPipeline &pipeline) {
 	createCommandPool(device, indices, pipeline.swapChainFramebuffers);
 	for (int i = 0; i < commandBuffers.size(); ++i) {
 		CommandBufferBeginInfo beginInfo;

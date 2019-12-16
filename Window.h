@@ -26,7 +26,7 @@ private:
 	void createInstance();
 	void createSurface();
 
-	std::vector<const char*> getRequiredExtensions();
+	static void getRequiredExtensions(std::vector<const char *>& extensions);
 
 	void loop();
 	void cleanup();
