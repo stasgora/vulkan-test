@@ -6,15 +6,16 @@ using namespace std;
 void Window::run() {
 	init();
 	loop();
-	cleanup();
 }
 
 void Window::init() {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	//glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+	glfwSetWindowUserPointer(window, this);
+	glfwSetFramebufferSizeCallback(window, onWindowResized);
 
 	createInstance();
 	debugLayer.init(*instance);
@@ -25,12 +26,15 @@ void Window::init() {
 }
 
 void Window::setupWindow(bool firstTime) {
+	WindowSize size;
+	while (size.width == 0 || size.height == 0) {
+		glfwGetFramebufferSize(window, &size.width, &size.height);
+		glfwWaitEvents();
+	}
 	if(!firstTime) {
 		deviceManager.device->waitIdle(); //TODO pass old swap chain to the new instead of waiting here
 		cleanupWindow();
 	}
-	WindowSize size;
-	glfwGetFramebufferSize(window, &size.width, &size.height);
 	swapChain.createSwapChain(deviceManager, surface, size);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
@@ -73,7 +77,9 @@ void Window::createInstance() {
 void Window::loop() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
-		renderer.drawFrame(*deviceManager.device, swapChain, commandBuffer.commandBuffers, deviceManager);
+		bool drawn = renderer.drawFrame(*deviceManager.device, swapChain, commandBuffer.commandBuffers, deviceManager);
+		if (!drawn)
+			setupWindow(false);
 	}
 	deviceManager.device->waitIdle();
 }
@@ -105,4 +111,13 @@ void Window::getRequiredExtensions(vector<const char *>& extensions) {
 
 	if (enableValidationLayers)
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+}
+
+void Window::onWindowResized(GLFWwindow *window, int width, int height) {
+	auto app = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+	app->renderer.frameBufferResized = true;
+}
+
+Window::~Window() {
+	cleanup();
 }

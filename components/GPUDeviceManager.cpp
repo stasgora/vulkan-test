@@ -48,7 +48,6 @@ void GPUDeviceManager::pickPhysicalDevice(Instance &instance, SurfaceKHR surface
 	}
 	if (!physicalDevice)
 		throw std::runtime_error("failed to find a suitable GPU!");
-	swapChainSupport = querySwapChainSupport(physicalDevice, surface);
 }
 
 bool GPUDeviceManager::isDeviceSuitable(PhysicalDevice device, SurfaceKHR surface) {

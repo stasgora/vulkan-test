@@ -20,6 +20,7 @@ const int HEIGHT = 600;
 class Window {
 public:
 	void run();
+	virtual ~Window();
 
 private:
 	void init();
@@ -28,6 +29,7 @@ private:
 	void createSurface();
 
 	static void getRequiredExtensions(std::vector<const char *>& extensions);
+	static void onWindowResized(GLFWwindow *window, int width, int height);
 
 	void loop();
 	void cleanupWindow();

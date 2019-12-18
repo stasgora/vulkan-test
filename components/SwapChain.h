@@ -24,6 +24,8 @@ private:
 	SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR>& availableFormats);
 	PresentModeKHR choosePresentMode(const std::vector<PresentModeKHR>& availablePresentModes);
 	Extent2D chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, WindowSize size);
+
+	SwapChainSupportDetails swapChainSupport;
 };
 
 

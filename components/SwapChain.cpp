@@ -1,9 +1,9 @@
 #include "SwapChain.h"
-#include "../Window.h"
 
 void SwapChain::createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surface, WindowSize size) {
-	swapChainExtent = chooseSwapExtent(deviceManager.swapChainSupport.capabilities, size);
-	SwapchainCreateInfoKHR createInfo = createSwapChainInfo(deviceManager.swapChainSupport, deviceManager.queueFamilyIndices, surface);
+	swapChainSupport = GPUDeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
+	swapChainExtent = chooseSwapExtent(swapChainSupport.capabilities, size);
+	SwapchainCreateInfoKHR createInfo = createSwapChainInfo(swapChainSupport, deviceManager.queueFamilyIndices, surface);
 	Device device = *deviceManager.device;
 	try {
 		swapChain = device.createSwapchainKHR(createInfo);
@@ -81,5 +81,7 @@ Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities,
 void SwapChain::cleanup(Device &device) {
 	for (const auto &imageView : swapChainImageViews)
 		device.destroyImageView(imageView);
+	swapChainImageViews.clear();
+	swapChainImages.clear();
 	device.destroySwapchainKHR(swapChain);
 }

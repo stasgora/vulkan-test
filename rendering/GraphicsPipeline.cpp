@@ -105,6 +105,7 @@ UniqueShaderModule GraphicsPipeline::createShaderModule(const std::vector<char> 
 void GraphicsPipeline::cleanup(Device &device) {
 	for (const auto &buffer : swapChainFramebuffers)
 		device.destroyFramebuffer(buffer);
+	swapChainFramebuffers.clear();
 	device.destroyPipeline(graphicsPipeline);
 	device.destroyPipelineLayout(pipelineLayout);
 	device.destroyRenderPass(renderPass);

@@ -13,8 +13,9 @@ class GraphicsRenderer {
 public:
 	void setupRendering(Device &device, uint32_t swapImageCount);
 	void cleanup(Device &device);
-	void drawFrame(Device &device, SwapChain &swapChain, std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> &buffers, GPUDeviceManager &deviceManager);
+	bool drawFrame(Device &device, SwapChain &swapChain, std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> &buffers, GPUDeviceManager &deviceManager);
 
+	bool frameBufferResized = false;
 private:
 	std::vector<Semaphore> imageAvailableSemaphores;
 	std::vector<Semaphore> renderFinishedSemaphores;

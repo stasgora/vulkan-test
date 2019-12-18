@@ -47,4 +47,5 @@ void GraphicsCommandBuffer::cleanup(Device &device) {
 
 void GraphicsCommandBuffer::clearBuffers(Device &device) {
 	device.freeCommandBuffers(commandPool, commandBuffers);
+	commandBuffers.clear();
 }
