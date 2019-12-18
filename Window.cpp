@@ -3,6 +3,12 @@
 
 using namespace std;
 
+Window::Window() : size({WIDTH, HEIGHT}) {}
+
+Window::~Window() {
+	cleanup();
+}
+
 void Window::run() {
 	init();
 	loop();
@@ -12,7 +18,6 @@ void Window::init() {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	//glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, onWindowResized);
@@ -21,12 +26,15 @@ void Window::init() {
 	debugLayer.init(*instance);
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
-	setupWindow();
+	swapChain.createSwapChain(deviceManager, surface, size);
+	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
+	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
+	commandBuffer.createCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
+	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline);
 	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
 }
 
 void Window::setupWindow(bool firstTime) {
-	WindowSize size;
 	while (size.width == 0 || size.height == 0) {
 		glfwGetFramebufferSize(window, &size.width, &size.height);
 		glfwWaitEvents();
@@ -38,7 +46,7 @@ void Window::setupWindow(bool firstTime) {
 	swapChain.createSwapChain(deviceManager, surface, size);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
-	commandBuffer.setupCommandBuffer(*deviceManager.device, deviceManager.queueFamilyIndices, swapChain, pipeline);
+	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline);
 }
 
 void Window::createSurface() {
@@ -116,8 +124,4 @@ void Window::getRequiredExtensions(vector<const char *>& extensions) {
 void Window::onWindowResized(GLFWwindow *window, int width, int height) {
 	auto app = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 	app->renderer.frameBufferResized = true;
-}
-
-Window::~Window() {
-	cleanup();
 }

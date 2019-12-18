@@ -22,9 +22,8 @@ bool GraphicsRenderer::drawFrame(Device &device, SwapChain &swapChain, std::vect
 	device.waitForFences(1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
-	Result result;
 	try {
-		result = device.acquireNextImageKHR(swapChain.swapChain, UINT32_MAX, imageAvailableSemaphores[currentFrame], nullptr, &imageIndex);
+		device.acquireNextImageKHR(swapChain.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], nullptr, &imageIndex);
 	} catch (vk::OutOfDateKHRError &err) {
 		return false;
 	} catch (vk::SystemError &err) {
@@ -48,6 +47,7 @@ bool GraphicsRenderer::drawFrame(Device &device, SwapChain &swapChain, std::vect
 	}
 	SwapchainKHR swapChains[] = {swapChain.swapChain};
 	PresentInfoKHR presentInfo(1, signalSemaphore, 1, swapChains, &imageIndex);
+	Result result;
 	try {
 		result = deviceManager.presentQueue.presentKHR(presentInfo);
 	} catch (vk::OutOfDateKHRError &err) {
@@ -59,9 +59,7 @@ bool GraphicsRenderer::drawFrame(Device &device, SwapChain &swapChain, std::vect
 	if(result == Result::eErrorOutOfDateKHR || result == Result::eSuboptimalKHR || frameBufferResized) {
 		frameBufferResized = false;
 		return false;
-	} else if (result != Result::eSuccess)
-		throw std::runtime_error("failed to present swap chain image!");
-
+	}
 	return true;
 }
 

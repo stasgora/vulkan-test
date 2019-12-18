@@ -22,6 +22,8 @@ public:
 	void run();
 	virtual ~Window();
 
+	Window();
+
 private:
 	void init();
 	void setupWindow(bool firstTime = true);
@@ -35,6 +37,7 @@ private:
 	void cleanupWindow();
 	void cleanup();
 
+	WindowSize size;
 	GLFWwindow* window;
 	UniqueInstance instance;
 	SurfaceKHR surface;

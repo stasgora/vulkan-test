@@ -1,8 +1,14 @@
 #include "GraphicsCommandBuffer.h"
 #include "../components/ComponentStructs.h"
 
-void GraphicsCommandBuffer::setupCommandBuffer(Device &device, QueueFamilyIndices &indices, SwapChain &swapChain, GraphicsPipeline &pipeline) {
-	createCommandPool(device, indices, pipeline.swapChainFramebuffers);
+void GraphicsCommandBuffer::createCommandBuffer(Device &device, SwapChain &swapChain, GraphicsPipeline &pipeline) {
+	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
+	CommandBufferAllocateInfo allocInfo(commandPool, CommandBufferLevel::ePrimary, commandBuffers.size());
+	try {
+		commandBuffers = device.allocateCommandBuffers(allocInfo);
+	} catch (vk::SystemError &err) {
+		throw std::runtime_error("failed to allocate command buffers!");
+	}
 	for (int i = 0; i < commandBuffers.size(); ++i) {
 		CommandBufferBeginInfo beginInfo;
 		try {
@@ -25,19 +31,12 @@ void GraphicsCommandBuffer::setupCommandBuffer(Device &device, QueueFamilyIndice
 	}
 }
 
-void GraphicsCommandBuffer::createCommandPool(Device &device, QueueFamilyIndices &indices, std::vector<Framebuffer> &frameBuffers) {
+void GraphicsCommandBuffer::createCommandPool(Device &device, QueueFamilyIndices &indices) {
 	CommandPoolCreateInfo poolInfo(CommandPoolCreateFlags(), indices.graphicsFamily.value());
 	try {
 		commandPool = device.createCommandPool(poolInfo);
 	} catch (vk::SystemError &err) {
 		throw std::runtime_error("failed to create command pool!");
-	}
-	commandBuffers.resize(frameBuffers.size());
-	CommandBufferAllocateInfo allocInfo(commandPool, CommandBufferLevel::ePrimary, commandBuffers.size());
-	try {
-		commandBuffers = device.allocateCommandBuffers(allocInfo);
-	} catch (vk::SystemError &err) {
-		throw std::runtime_error("failed to allocate command buffers!");
 	}
 }
 
