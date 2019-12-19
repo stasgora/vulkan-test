@@ -1,7 +1,7 @@
 #include "GraphicsPipeline.h"
 #include <fstream>
 
-void GraphicsPipeline::createFrameBuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews) {
+void GraphicsPipeline::createFrameBuffers(const Device &device, const Extent2D &extent, const std::vector<ImageView> &imageViews) {
 	swapChainFramebuffers.resize(imageViews.size());
 	for (int i = 0; i < imageViews.size(); ++i) {
 		ImageView attachments[] = {imageViews[i]};
@@ -14,12 +14,12 @@ void GraphicsPipeline::createFrameBuffers(Device &device, Extent2D &extent, std:
 	}
 }
 
-void GraphicsPipeline::setupPipeline(Device &device, Extent2D &extent, Format &format) {
+void GraphicsPipeline::setupPipeline(const Device &device, const Extent2D &extent, const Format &format) {
 	createRenderPass(device, format);
 	createGraphicsPipeline(device, extent);
 }
 
-void GraphicsPipeline::createRenderPass(Device &device, Format &format) {
+void GraphicsPipeline::createRenderPass(const Device &device, const Format &format) {
 	AttachmentDescription colorAttachment;
 	colorAttachment.format = format;
 	colorAttachment.loadOp = AttachmentLoadOp::eClear;
@@ -41,7 +41,7 @@ void GraphicsPipeline::createRenderPass(Device &device, Format &format) {
 	}
 }
 
-void GraphicsPipeline::createGraphicsPipeline(Device &device, Extent2D &extent) {
+void GraphicsPipeline::createGraphicsPipeline(const Device &device, const Extent2D &extent) {
 	auto vertexShaderModule = createShaderModule(readFile("../shaders/vert.spv"), device);
 	auto fragmentShaderModule = createShaderModule(readFile("../shaders/frag.spv"), device);
 
@@ -93,7 +93,7 @@ std::vector<char> GraphicsPipeline::readFile(const std::string &fileName) {
 	return buffer;
 }
 
-UniqueShaderModule GraphicsPipeline::createShaderModule(const std::vector<char> &code, Device &device) {
+UniqueShaderModule GraphicsPipeline::createShaderModule(const std::vector<char> &code, const Device &device) {
 	ShaderModuleCreateInfo createInfo(ShaderModuleCreateFlags(), code.size(), reinterpret_cast<const u_int32_t*>(code.data()));
 	try {
 		return device.createShaderModuleUnique(createInfo);
@@ -102,7 +102,7 @@ UniqueShaderModule GraphicsPipeline::createShaderModule(const std::vector<char> 
 	}
 }
 
-void GraphicsPipeline::cleanup(Device &device) {
+void GraphicsPipeline::cleanup(const Device &device) {
 	for (const auto &buffer : swapChainFramebuffers)
 		device.destroyFramebuffer(buffer);
 	swapChainFramebuffers.clear();

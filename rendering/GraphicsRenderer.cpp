@@ -1,7 +1,7 @@
 #include "GraphicsRenderer.h"
 #include "../components/GPUDeviceManager.h"
 
-void GraphicsRenderer::setupRendering(Device &device, uint32_t swapImageCount) {
+void GraphicsRenderer::setupRendering(const Device &device, uint32_t swapImageCount) {
 	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -17,8 +17,8 @@ void GraphicsRenderer::setupRendering(Device &device, uint32_t swapImageCount) {
 	}
 }
 
-bool GraphicsRenderer::drawFrame(Device &device, SwapChain &swapChain, std::vector<vk::CommandBuffer,
-		std::allocator<vk::CommandBuffer>> &buffers, GPUDeviceManager &deviceManager) {
+bool GraphicsRenderer::drawFrame(const Device &device, const SwapChain &swapChain, std::vector<vk::CommandBuffer,
+		std::allocator<vk::CommandBuffer>> &buffers, const GPUDeviceManager &deviceManager) {
 	device.waitForFences(1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
@@ -62,7 +62,7 @@ bool GraphicsRenderer::drawFrame(Device &device, SwapChain &swapChain, std::vect
 	return true;
 }
 
-void GraphicsRenderer::cleanup(Device &device) {
+void GraphicsRenderer::cleanup(const Device &device) {
 	for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
 		device.destroySemaphore(imageAvailableSemaphores[i]);
 		device.destroySemaphore(renderFinishedSemaphores[i]);

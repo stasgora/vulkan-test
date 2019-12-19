@@ -12,8 +12,8 @@ const std::vector<const char*> deviceExtensions = {
 
 class GPUDeviceManager {
 public:
-	void setupDevice(Instance& instance, SurfaceKHR &surface);
-	static SwapChainSupportDetails querySwapChainSupport(PhysicalDevice device, SurfaceKHR surface);
+	void setupDevice(const Instance& instance, const SurfaceKHR &surface);
+	static SwapChainSupportDetails querySwapChainSupport(const PhysicalDevice &device, const SurfaceKHR &surface);
 
 	UniqueDevice device;
 
@@ -22,12 +22,12 @@ public:
 	Queue presentQueue;
 	PhysicalDevice physicalDevice;
 private:
-	void pickPhysicalDevice(Instance &instance, SurfaceKHR surface);
-	void createLogicalDevice(SurfaceKHR surface);
+	void pickPhysicalDevice(const Instance &instance, const SurfaceKHR &surface);
+	void createLogicalDevice(const SurfaceKHR &surface);
 
-	static bool checkDeviceExtensionSupport(PhysicalDevice device);
-	static bool isDeviceSuitable(PhysicalDevice device, SurfaceKHR surface);
-	static QueueFamilyIndices findQueueFamilies(PhysicalDevice device, SurfaceKHR surface);
+	static bool checkDeviceExtensionSupport(const PhysicalDevice &device);
+	static bool isDeviceSuitable(const PhysicalDevice &device, const SurfaceKHR &surface);
+	static QueueFamilyIndices findQueueFamilies(const PhysicalDevice &device, const SurfaceKHR &surface);
 };
 
 

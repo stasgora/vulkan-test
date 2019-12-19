@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-void DebugLayer::init(VkInstance instance) {
+void DebugLayer::init(const VkInstance &instance) {
 	if (!enableValidationLayers)
 		return;
 	DebugUtilsMessengerCreateInfoEXT createInfo;
@@ -32,14 +32,15 @@ bool DebugLayer::checkValidationLayerSupport() {
 	return true;
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL DebugLayer::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-                                                     VkDebugUtilsMessageTypeFlagsEXT messageType,
+VKAPI_ATTR VkBool32 VKAPI_CALL DebugLayer::debugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                                                         const VkDebugUtilsMessageTypeFlagsEXT messageType,
                                                      const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
 	cerr << "validation layer: " << pCallbackData->pMessage << endl;
 	return VK_FALSE;
 }
 
-VkResult DebugLayer::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback) {
+VkResult DebugLayer::CreateDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback) {
 	if (!enableValidationLayers)
 		return VK_SUCCESS;
 	auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
@@ -50,7 +51,7 @@ VkResult DebugLayer::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkD
 	}
 }
 
-void DebugLayer::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator) {
+void DebugLayer::DestroyDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator) {
 	if (!enableValidationLayers)
 		return;
 	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
@@ -68,6 +69,6 @@ void DebugLayer::createDebugMessengerInfo(DebugUtilsMessengerCreateInfoEXT &info
 	);
 }
 
-void DebugLayer::cleanup(VkInstance instance) {
+void DebugLayer::cleanup(const VkInstance &instance) {
 	DestroyDebugUtilsMessengerEXT(instance, callback, nullptr);
 }

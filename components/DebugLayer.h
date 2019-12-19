@@ -15,18 +15,18 @@ const bool enableValidationLayers = true;
 
 class DebugLayer {
 public:
-	void init(VkInstance instance);
-	void cleanup(VkInstance instance);
+	void init(const VkInstance &instance);
+	void cleanup(const VkInstance &instance);
 
 	bool checkValidationLayerSupport();
 	void createDebugMessengerInfo(DebugUtilsMessengerCreateInfoEXT& info);
 
 private:
-	static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+	static VkResult CreateDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
 	                                             const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback);
-	static void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator);
+	static void DestroyDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator);
 
-	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType,
+	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, const VkDebugUtilsMessageTypeFlagsEXT messageType,
 	                                                    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
 
 	VkDebugUtilsMessengerEXT callback;

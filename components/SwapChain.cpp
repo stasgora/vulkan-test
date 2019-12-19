@@ -1,6 +1,6 @@
 #include "SwapChain.h"
 
-void SwapChain::createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surface, WindowSize size) {
+void SwapChain::createSwapChain(const GPUDeviceManager &deviceManager, const SurfaceKHR &surface, const WindowSize size) {
 	SwapChainSupportDetails swapChainSupport = GPUDeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
 	swapChainExtent = chooseSwapExtent(swapChainSupport.capabilities, size);
 	SwapchainCreateInfoKHR createInfo = createSwapChainInfo(swapChainSupport, deviceManager.queueFamilyIndices, surface);
@@ -14,7 +14,7 @@ void SwapChain::createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surf
 	swapChainFormat = createInfo.imageFormat;
 }
 
-SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices& indices, SurfaceKHR surface) {
+SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(const SwapChainSupportDetails &swapChainSupport, const QueueFamilyIndices& indices, const SurfaceKHR &surface) {
 	const PresentModeKHR presentMode = choosePresentMode(swapChainSupport.presentModes);
 	const SurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
@@ -38,7 +38,7 @@ SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(SwapChainSupportDetails &s
 	return createInfo;
 }
 
-void SwapChain::createImageViews(Device &device) {
+void SwapChain::createImageViews(const Device &device) {
 	swapChainImageViews.reserve(swapChainImages.size());
 	for (int i = 0; i < swapChainImages.size(); ++i) {
 		ImageViewCreateInfo createInfo(ImageViewCreateFlags(), swapChainImages[i], ImageViewType::e2D, swapChainFormat);
@@ -68,7 +68,7 @@ PresentModeKHR SwapChain::choosePresentMode(const std::vector<PresentModeKHR> &a
 	return bestMode;
 }
 
-Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, WindowSize size) {
+Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, const WindowSize size) {
 	if (capabilities.currentExtent.width != UINT32_MAX)
 		return capabilities.currentExtent;
 	Extent2D actualExtent = {static_cast<uint32_t>(size.width), static_cast<uint32_t>(size.height)};
@@ -77,7 +77,7 @@ Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities,
 	return actualExtent;
 }
 
-void SwapChain::cleanup(Device &device) {
+void SwapChain::cleanup(const Device &device) {
 	for (const auto &imageView : swapChainImageViews)
 		device.destroyImageView(imageView);
 	swapChainImageViews.clear();

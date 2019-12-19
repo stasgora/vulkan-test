@@ -1,7 +1,7 @@
 #include "GraphicsCommandBuffer.h"
 #include "../components/ComponentStructs.h"
 
-void GraphicsCommandBuffer::createCommandBuffer(Device &device, SwapChain &swapChain, GraphicsPipeline &pipeline) {
+void GraphicsCommandBuffer::createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline) {
 	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
 	CommandBufferAllocateInfo allocInfo(commandPool, CommandBufferLevel::ePrimary, commandBuffers.size());
 	try {
@@ -31,7 +31,7 @@ void GraphicsCommandBuffer::createCommandBuffer(Device &device, SwapChain &swapC
 	}
 }
 
-void GraphicsCommandBuffer::createCommandPool(Device &device, QueueFamilyIndices &indices) {
+void GraphicsCommandBuffer::createCommandPool(const Device &device, const QueueFamilyIndices &indices) {
 	CommandPoolCreateInfo poolInfo(CommandPoolCreateFlags(), indices.graphicsFamily.value());
 	try {
 		commandPool = device.createCommandPool(poolInfo);
@@ -40,11 +40,11 @@ void GraphicsCommandBuffer::createCommandPool(Device &device, QueueFamilyIndices
 	}
 }
 
-void GraphicsCommandBuffer::cleanup(Device &device) {
+void GraphicsCommandBuffer::cleanup(const Device &device) {
 	device.destroyCommandPool(commandPool);
 }
 
-void GraphicsCommandBuffer::clearBuffers(Device &device) {
+void GraphicsCommandBuffer::clearBuffers(const Device &device) {
 	device.freeCommandBuffers(commandPool, commandBuffers);
 	commandBuffers.clear();
 }

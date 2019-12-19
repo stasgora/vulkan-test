@@ -9,18 +9,18 @@ using namespace vk;
 
 class GraphicsPipeline {
 public:
-	void setupPipeline(Device &device, Extent2D &extent, Format &format);
-	void createFrameBuffers(Device &device, Extent2D &extent, std::vector<ImageView> &imageViews);
-	void cleanup(Device &device);
+	void setupPipeline(const Device &device, const Extent2D &extent, const Format &format);
+	void createFrameBuffers(const Device &device, const Extent2D &extent, const std::vector<ImageView> &imageViews);
+	void cleanup(const Device &device);
 
 	std::vector<Framebuffer> swapChainFramebuffers;
 	RenderPass renderPass;
 	Pipeline graphicsPipeline;
 private:
-	void createRenderPass(Device &device, Format &format);
-	void createGraphicsPipeline(Device &device, Extent2D &extent);
+	void createRenderPass(const Device &device, const Format &format);
+	void createGraphicsPipeline(const Device &device, const Extent2D &extent);
 
-	static UniqueShaderModule createShaderModule(const std::vector<char> &code, Device &device);
+	static UniqueShaderModule createShaderModule(const std::vector<char> &code, const Device &device);
 	static std::vector<char> readFile(const std::string &fileName);
 
 	PipelineLayout pipelineLayout;
