@@ -27,6 +27,7 @@ void Window::init() {
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
 	commandBuffer.createCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
+	vertexBuffer.createVertexBuffer(*deviceManager.device, deviceManager.memoryProperties);
 	sizeDependentWindowSetup();
 	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
 }

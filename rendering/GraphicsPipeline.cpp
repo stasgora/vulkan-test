@@ -1,4 +1,5 @@
 #include "GraphicsPipeline.h"
+#include "../components/VulkanStructs.h"
 #include <fstream>
 
 void GraphicsPipeline::createFrameBuffers(const Device &device, const Extent2D &extent, const std::vector<ImageView> &imageViews) {
@@ -49,7 +50,10 @@ void GraphicsPipeline::createGraphicsPipeline(const Device &device, const Extent
 			{ PipelineShaderStageCreateFlags(), ShaderStageFlagBits::eVertex, *vertexShaderModule, "main" },
 			{ PipelineShaderStageCreateFlags(), ShaderStageFlagBits::eFragment, *fragmentShaderModule, "main" }
 	};
-	PipelineVertexInputStateCreateInfo vertexInputInfo;
+	auto attributeDescriptions = Vertex::getAttributeDescriptions();
+	auto bindingDescriptions = Vertex::getBindingDescription();
+	PipelineVertexInputStateCreateInfo vertexInputInfo(PipelineVertexInputStateCreateFlags(), 1,
+			&bindingDescriptions, static_cast<uint32_t>(attributeDescriptions.size()), attributeDescriptions.data());
 	PipelineInputAssemblyStateCreateInfo inputAssembly = {};
 	inputAssembly.topology = vk::PrimitiveTopology::eTriangleList;
 	Viewport viewport(0, 0, extent.width, extent.height, 0, 1);

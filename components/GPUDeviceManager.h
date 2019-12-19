@@ -2,7 +2,7 @@
 #define TEST_GPUDEVICEMANAGER_H
 
 #include <vulkan/vulkan.hpp>
-#include "ComponentStructs.h"
+#include "VulkanStructs.h"
 
 using namespace vk;
 
@@ -21,6 +21,7 @@ public:
 	Queue graphicsQueue;
 	Queue presentQueue;
 	PhysicalDevice physicalDevice;
+	PhysicalDeviceMemoryProperties memoryProperties;
 private:
 	void pickPhysicalDevice(const Instance &instance, const SurfaceKHR &surface);
 	void createLogicalDevice(const SurfaceKHR &surface);

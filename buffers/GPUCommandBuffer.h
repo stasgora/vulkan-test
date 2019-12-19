@@ -1,14 +1,14 @@
-#ifndef TEST_GRAPHICSCOMMANDBUFFER_H
-#define TEST_GRAPHICSCOMMANDBUFFER_H
+#ifndef TEST_GPUCOMMANDBUFFER_H
+#define TEST_GPUCOMMANDBUFFER_H
 
 #include <vulkan/vulkan.hpp>
-#include "../components/ComponentStructs.h"
+#include "../components/VulkanStructs.h"
 #include "../components/SwapChain.h"
-#include "GraphicsPipeline.h"
+#include "../rendering/GraphicsPipeline.h"
 
 using namespace vk;
 
-class GraphicsCommandBuffer {
+class GPUCommandBuffer {
 public:
 	void createCommandPool(const Device &device, const QueueFamilyIndices &indices);
 	void createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline);
@@ -21,4 +21,4 @@ private:
 };
 
 
-#endif //TEST_GRAPHICSCOMMANDBUFFER_H
+#endif //TEST_GPUCOMMANDBUFFER_H

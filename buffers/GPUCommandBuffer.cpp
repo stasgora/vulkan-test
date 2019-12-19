@@ -1,7 +1,7 @@
-#include "GraphicsCommandBuffer.h"
-#include "../components/ComponentStructs.h"
+#include "GPUCommandBuffer.h"
+#include "../components/VulkanStructs.h"
 
-void GraphicsCommandBuffer::createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline) {
+void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline) {
 	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
 	CommandBufferAllocateInfo allocInfo(commandPool, CommandBufferLevel::ePrimary, commandBuffers.size());
 	try {
@@ -31,7 +31,7 @@ void GraphicsCommandBuffer::createCommandBuffer(const Device &device, const Swap
 	}
 }
 
-void GraphicsCommandBuffer::createCommandPool(const Device &device, const QueueFamilyIndices &indices) {
+void GPUCommandBuffer::createCommandPool(const Device &device, const QueueFamilyIndices &indices) {
 	CommandPoolCreateInfo poolInfo(CommandPoolCreateFlags(), indices.graphicsFamily.value());
 	try {
 		commandPool = device.createCommandPool(poolInfo);
@@ -40,11 +40,11 @@ void GraphicsCommandBuffer::createCommandPool(const Device &device, const QueueF
 	}
 }
 
-void GraphicsCommandBuffer::cleanup(const Device &device) {
+void GPUCommandBuffer::cleanup(const Device &device) {
 	device.destroyCommandPool(commandPool);
 }
 
-void GraphicsCommandBuffer::clearBuffers(const Device &device) {
+void GPUCommandBuffer::clearBuffers(const Device &device) {
 	device.freeCommandBuffers(commandPool, commandBuffers);
 	commandBuffers.clear();
 }

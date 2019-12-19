@@ -8,8 +8,9 @@
 #include "components/GPUDeviceManager.h"
 #include "components/SwapChain.h"
 #include "rendering/GraphicsPipeline.h"
-#include "rendering/GraphicsCommandBuffer.h"
+#include "buffers/GPUCommandBuffer.h"
 #include "rendering/GraphicsRenderer.h"
+#include "buffers/GPUVertexBuffer.h"
 
 using namespace vk;
 
@@ -43,7 +44,8 @@ private:
 	SurfaceKHR surface;
 
 	GraphicsPipeline pipeline;
-	GraphicsCommandBuffer commandBuffer;
+	GPUCommandBuffer commandBuffer;
+	GPUVertexBuffer vertexBuffer;
 	GraphicsRenderer renderer;
 
 	GPUDeviceManager deviceManager;

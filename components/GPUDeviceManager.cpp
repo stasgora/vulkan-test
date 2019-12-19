@@ -48,6 +48,7 @@ void GPUDeviceManager::pickPhysicalDevice(const Instance &instance, const Surfac
 	}
 	if (!physicalDevice)
 		throw std::runtime_error("failed to find a suitable GPU!");
+	memoryProperties = physicalDevice.getMemoryProperties();
 }
 
 bool GPUDeviceManager::isDeviceSuitable(const PhysicalDevice &device, const SurfaceKHR &surface) {

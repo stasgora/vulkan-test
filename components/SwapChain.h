@@ -2,7 +2,7 @@
 #define TEST_SWAPCHAIN_H
 
 #include <vulkan/vulkan.hpp>
-#include "ComponentStructs.h"
+#include "VulkanStructs.h"
 #include "GPUDeviceManager.h"
 
 using namespace vk;
