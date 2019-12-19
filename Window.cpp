@@ -27,6 +27,7 @@ void Window::init() {
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
 	swapChain.createSwapChain(deviceManager, surface, size);
+	swapChain.createImageViews(*deviceManager.device);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
 	commandBuffer.createCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
@@ -44,6 +45,7 @@ void Window::setupWindow(bool firstTime) {
 		cleanupWindow();
 	}
 	swapChain.createSwapChain(deviceManager, surface, size);
+	swapChain.createImageViews(*deviceManager.device);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
 	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline);

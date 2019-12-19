@@ -10,6 +10,7 @@ using namespace vk;
 class SwapChain {
 public:
 	void createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surface, WindowSize size);
+	void createImageViews(Device &device);
 	void cleanup(Device &device);
 
 	SwapchainKHR swapChain;
@@ -18,14 +19,11 @@ public:
 	std::vector<ImageView> swapChainImageViews;
 	std::vector<Image> swapChainImages;
 private:
-	void createImageViews(Device &device);
 	SwapchainCreateInfoKHR createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices &indices, SurfaceKHR surface);
 
 	SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR>& availableFormats);
 	PresentModeKHR choosePresentMode(const std::vector<PresentModeKHR>& availablePresentModes);
 	Extent2D chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, WindowSize size);
-
-	SwapChainSupportDetails swapChainSupport;
 };
 
 

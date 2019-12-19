@@ -1,7 +1,7 @@
 #include "SwapChain.h"
 
 void SwapChain::createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surface, WindowSize size) {
-	swapChainSupport = GPUDeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
+	SwapChainSupportDetails swapChainSupport = GPUDeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
 	swapChainExtent = chooseSwapExtent(swapChainSupport.capabilities, size);
 	SwapchainCreateInfoKHR createInfo = createSwapChainInfo(swapChainSupport, deviceManager.queueFamilyIndices, surface);
 	Device device = *deviceManager.device;
@@ -12,7 +12,6 @@ void SwapChain::createSwapChain(GPUDeviceManager &deviceManager, SurfaceKHR surf
 	}
 	swapChainImages = device.getSwapchainImagesKHR(swapChain);
 	swapChainFormat = createInfo.imageFormat;
-	createImageViews(device);
 }
 
 SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(SwapChainSupportDetails &swapChainSupport, QueueFamilyIndices& indices, SurfaceKHR surface) {
