@@ -26,7 +26,7 @@ public:
 
 private:
 	void init();
-	void setupWindow(bool firstTime = true);
+	void sizeDependentWindowSetup(bool firstTime = true);
 	void createInstance();
 	void createSurface();
 
@@ -34,7 +34,7 @@ private:
 	static void onWindowResized(GLFWwindow *window, int width, int height);
 
 	void loop();
-	void cleanupWindow();
+	void sizeDependentWindowCleanup();
 	void cleanup();
 
 	WindowSize size;

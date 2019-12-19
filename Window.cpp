@@ -26,23 +26,19 @@ void Window::init() {
 	debugLayer.init(*instance);
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
-	swapChain.createSwapChain(deviceManager, surface, size);
-	swapChain.createImageViews(*deviceManager.device);
-	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
-	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
 	commandBuffer.createCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
-	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline);
+	sizeDependentWindowSetup();
 	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
 }
 
-void Window::setupWindow(bool firstTime) {
+void Window::sizeDependentWindowSetup(bool firstTime) {
 	while (size.width == 0 || size.height == 0) {
 		glfwGetFramebufferSize(window, &size.width, &size.height);
 		glfwWaitEvents();
 	}
 	if(!firstTime) {
 		deviceManager.device->waitIdle(); //TODO pass old swap chain to the new instead of waiting here
-		cleanupWindow();
+		sizeDependentWindowCleanup();
 	}
 	swapChain.createSwapChain(deviceManager, surface, size);
 	swapChain.createImageViews(*deviceManager.device);
@@ -89,13 +85,13 @@ void Window::loop() {
 		glfwPollEvents();
 		bool drawn = renderer.drawFrame(*deviceManager.device, swapChain, commandBuffer.commandBuffers, deviceManager);
 		if (!drawn)
-			setupWindow(false);
+			sizeDependentWindowSetup(false);
 	}
 	deviceManager.device->waitIdle();
 }
 
 void Window::cleanup() {
-	cleanupWindow();
+	sizeDependentWindowCleanup();
 
 	renderer.cleanup(*deviceManager.device);
 	commandBuffer.cleanup(*deviceManager.device);
@@ -105,7 +101,7 @@ void Window::cleanup() {
 	glfwTerminate();
 }
 
-void Window::cleanupWindow() {
+void Window::sizeDependentWindowCleanup() {
 	deviceManager.device->waitIdle();
 
 	pipeline.cleanup(*deviceManager.device);
