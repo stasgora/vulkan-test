@@ -125,5 +125,6 @@ void Window::getRequiredExtensions(vector<const char *>& extensions) {
 
 void Window::onWindowResized(GLFWwindow *window, int width, int height) {
 	auto app = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+	app->size = {width, height};
 	app->renderer.frameBufferResized = true;
 }

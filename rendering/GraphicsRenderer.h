@@ -20,7 +20,7 @@ private:
 	std::vector<Semaphore> imageAvailableSemaphores;
 	std::vector<Semaphore> renderFinishedSemaphores;
 	std::vector<Fence> inFlightFences;
-	std::vector<int> imagesInFlight;
+	std::vector<Fence*> imagesInFlight;
 	size_t currentFrame = 0;
 };
 

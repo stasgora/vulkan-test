@@ -5,7 +5,7 @@ void GraphicsRenderer::setupRendering(Device &device, uint32_t swapImageCount) {
 	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-	imagesInFlight.resize(swapImageCount, -1);
+	imagesInFlight.resize(swapImageCount, nullptr);
 	try {
 		for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
 			imageAvailableSemaphores[i] = device.createSemaphore({});
@@ -30,9 +30,9 @@ bool GraphicsRenderer::drawFrame(Device &device, SwapChain &swapChain, std::vect
 		throw std::runtime_error("failed to acquire swap chain image!");
 	} //TODO what if suboptimal?
 
-	if (imagesInFlight[imageIndex] >= 0)
-		device.waitForFences(1, &inFlightFences[imagesInFlight[imageIndex]], VK_TRUE, UINT64_MAX);
-	imagesInFlight[imageIndex] = currentFrame;
+	if (imagesInFlight[imageIndex] != nullptr)
+		device.waitForFences(1, imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+	imagesInFlight[imageIndex] = &inFlightFences[currentFrame];
 
 	Semaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]};
 	PipelineStageFlags waitStages[] = {PipelineStageFlagBits::eColorAttachmentOutput};
