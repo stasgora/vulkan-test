@@ -1,7 +1,8 @@
 #include "GPUCommandBuffer.h"
 #include "../components/VulkanStructs.h"
+#include "../Window.h"
 
-void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline, const VertexBuffer &vertexBuffer) {
+void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline, const GPUBuffer<Vertex> &vertexBuffer) {
 	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
 	CommandBufferAllocateInfo allocInfo(commandPool, CommandBufferLevel::ePrimary, commandBuffers.size());
 	try {

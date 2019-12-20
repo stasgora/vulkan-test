@@ -10,13 +10,19 @@
 #include "rendering/GraphicsPipeline.h"
 #include "buffers/GPUCommandBuffer.h"
 #include "rendering/GraphicsRenderer.h"
-#include "buffers/VertexBuffer.h"
 
 using namespace vk;
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
+const std::vector<Vertex> vertices = {
+		{{-0.5f, -0.5f}, {0.2f, 0.0f, 0.8f}},
+		{{0.5f, -0.5f}, {0.0f, 0.4f, 0.9f}},
+		{{0.5f, 0.5f}, {0.2f, 0.8f, 1.0f}},
+		{{-0.5f, 0.5f}, {0.0f, 0.5f, 0.7f}}
+};
+const std::vector<uint16_t> indices = { 0, 1, 2, 2, 3, 0 };
 
 class Window {
 public:
@@ -45,7 +51,8 @@ private:
 
 	GraphicsPipeline pipeline;
 	GPUCommandBuffer commandBuffer;
-	VertexBuffer vertexBuffer;
+	GPUBuffer<Vertex> vertexBuffer;
+	GPUBuffer<uint16_t> indexBuffer;
 	GraphicsRenderer renderer;
 
 	GPUDeviceManager deviceManager;

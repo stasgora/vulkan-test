@@ -7,5 +7,5 @@ find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 
-add_executable(test main.cpp Window.cpp Window.h components/DebugLayer.cpp components/DebugLayer.h components/GPUDeviceManager.cpp components/GPUDeviceManager.h components/SwapChain.cpp components/SwapChain.h components/VulkanStructs.h rendering/GraphicsPipeline.cpp rendering/GraphicsPipeline.h buffers/GPUCommandBuffer.cpp buffers/GPUCommandBuffer.h rendering/GraphicsRenderer.cpp rendering/GraphicsRenderer.h buffers/VertexBuffer.cpp buffers/VertexBuffer.h buffers/IndexBuffer.cpp buffers/IndexBuffer.h buffers/GPUBuffer.cpp buffers/GPUBuffer.h)
+add_executable(test main.cpp Window.cpp Window.h components/DebugLayer.cpp components/DebugLayer.h components/GPUDeviceManager.cpp components/GPUDeviceManager.h components/SwapChain.cpp components/SwapChain.h components/VulkanStructs.h rendering/GraphicsPipeline.cpp rendering/GraphicsPipeline.h buffers/GPUCommandBuffer.cpp buffers/GPUCommandBuffer.h rendering/GraphicsRenderer.cpp rendering/GraphicsRenderer.h buffers/GPUBuffer.cpp buffers/GPUBuffer.h)
 target_link_libraries(test Vulkan::Vulkan glfw glm)
