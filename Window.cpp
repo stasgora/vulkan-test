@@ -3,7 +3,10 @@
 
 using namespace std;
 
-Window::Window() : size({WIDTH, HEIGHT}) {}
+Window::Window()
+: size({WIDTH, HEIGHT}),
+vertexBuffer(vertices, BufferUsageFlagBits::eVertexBuffer),
+indexBuffer(indices, BufferUsageFlagBits::eIndexBuffer) {}
 
 Window::~Window() {
 	cleanup();
@@ -27,7 +30,8 @@ void Window::init() {
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
 	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
-	vertexBuffer.createVertexBuffer(deviceManager);
+	vertexBuffer.createDataBuffer(deviceManager);
+	indexBuffer.createDataBuffer(deviceManager);
 	sizeDependentWindowSetup();
 	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
 }
@@ -45,7 +49,7 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	swapChain.createImageViews(*deviceManager.device);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
-	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer);
+	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer.buffer);
 }
 
 void Window::createSurface() {
@@ -97,6 +101,7 @@ void Window::cleanup() {
 	renderer.cleanup(*deviceManager.device);
 	commandBuffer.cleanup(*deviceManager.device);
 	vertexBuffer.cleanup(*deviceManager.device);
+	indexBuffer.cleanup(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);
