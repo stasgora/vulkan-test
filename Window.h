@@ -51,7 +51,7 @@ private:
 
 	GraphicsPipeline pipeline;
 	GPUCommandBuffer commandBuffer;
-	GPUBuffer<Vertex> vertexBuffer;
+	GPUBuffer<Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
 	GPUBuffer<uint16_t> indexBuffer;
 	GraphicsRenderer renderer;
 

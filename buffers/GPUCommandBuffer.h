@@ -12,7 +12,7 @@ using namespace vk;
 class GPUCommandBuffer {
 public:
 	void createMainCommandPool(const Device &device, const QueueFamilyIndices &indices);
-	void createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline, const Buffer &vertexBuffer);
+	void createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline, const Buffer &vertexBuffer, const Buffer &indexBuffer);
 	void cleanup(const Device &device);
 	void clearBuffers(const Device &device);
 

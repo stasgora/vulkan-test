@@ -49,7 +49,7 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	swapChain.createImageViews(*deviceManager.device);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
-	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer.buffer);
+	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer.buffer, indexBuffer.buffer);
 }
 
 void Window::createSurface() {
