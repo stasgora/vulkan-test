@@ -22,7 +22,7 @@ void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain
 		commandBuffers[i].beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
 		commandBuffers[i].bindPipeline(PipelineBindPoint::eGraphics, pipeline.graphicsPipeline);
 
-		Buffer vertexBuffers[] = {vertexBuffer.buffer};
+		Buffer vertexBuffers[] = {vertexBuffer.vertexBuffer};
 		DeviceSize offsets[] = {0};
 		commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
 
@@ -36,13 +36,8 @@ void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain
 	}
 }
 
-void GPUCommandBuffer::createCommandPool(const Device &device, const QueueFamilyIndices &indices) {
-	CommandPoolCreateInfo poolInfo(CommandPoolCreateFlags(), indices.graphicsFamily.value());
-	try {
-		commandPool = device.createCommandPool(poolInfo);
-	} catch (vk::SystemError &err) {
-		throw std::runtime_error("failed to create command pool!");
-	}
+void GPUCommandBuffer::createMainCommandPool(const Device &device, const QueueFamilyIndices &indices) {
+	createCommandPool(commandPool, CommandPoolCreateFlags(), device, indices);
 }
 
 void GPUCommandBuffer::cleanup(const Device &device) {
@@ -52,4 +47,13 @@ void GPUCommandBuffer::cleanup(const Device &device) {
 void GPUCommandBuffer::clearBuffers(const Device &device) {
 	device.freeCommandBuffers(commandPool, commandBuffers);
 	commandBuffers.clear();
+}
+
+void GPUCommandBuffer::createCommandPool(CommandPool &commandPool, const CommandPoolCreateFlags &flags, const Device &device, const QueueFamilyIndices &indices) {
+	CommandPoolCreateInfo poolInfo(flags, indices.graphicsFamily.value());
+	try {
+		commandPool = device.createCommandPool(poolInfo);
+	} catch (vk::SystemError &err) {
+		throw std::runtime_error("failed to create command pool!");
+	}
 }

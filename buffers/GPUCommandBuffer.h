@@ -11,12 +11,14 @@ using namespace vk;
 
 class GPUCommandBuffer {
 public:
-	void createCommandPool(const Device &device, const QueueFamilyIndices &indices);
+	void createMainCommandPool(const Device &device, const QueueFamilyIndices &indices);
 	void createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline, const GPUVertexBuffer &vertexBuffer);
 	void cleanup(const Device &device);
 	void clearBuffers(const Device &device);
 
-	std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> commandBuffers;
+	static void createCommandPool(CommandPool &commandPool, const CommandPoolCreateFlags &flags, const Device &device, const QueueFamilyIndices &indices);
+
+	std::vector<vk::CommandBuffer> commandBuffers;
 private:
 	CommandPool commandPool;
 };
