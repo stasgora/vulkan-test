@@ -10,7 +10,7 @@
 #include "rendering/GraphicsPipeline.h"
 #include "buffers/GPUCommandBuffer.h"
 #include "rendering/GraphicsRenderer.h"
-#include "buffers/GPUVertexBuffer.h"
+#include "buffers/VertexBuffer.h"
 
 using namespace vk;
 
@@ -45,7 +45,7 @@ private:
 
 	GraphicsPipeline pipeline;
 	GPUCommandBuffer commandBuffer;
-	GPUVertexBuffer vertexBuffer;
+	VertexBuffer vertexBuffer;
 	GraphicsRenderer renderer;
 
 	GPUDeviceManager deviceManager;
