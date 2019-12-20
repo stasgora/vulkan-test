@@ -5,13 +5,14 @@
 #include "../components/VulkanStructs.h"
 #include "../components/SwapChain.h"
 #include "../rendering/GraphicsPipeline.h"
+#include "GPUVertexBuffer.h"
 
 using namespace vk;
 
 class GPUCommandBuffer {
 public:
 	void createCommandPool(const Device &device, const QueueFamilyIndices &indices);
-	void createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline);
+	void createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline, const GPUVertexBuffer &vertexBuffer);
 	void cleanup(const Device &device);
 	void clearBuffers(const Device &device);
 

@@ -16,6 +16,9 @@ void GPUVertexBuffer::createVertexBuffer(const Device &device, const PhysicalDev
 		throw std::runtime_error("failed to allocate vertex buffer memory!");
 	}
 	device.bindBufferMemory(buffer, bufferMemory, 0);
+	void* data = device.mapMemory(bufferMemory, 0, bufferInfo.size);
+	memcpy(data, vertices.data(), (size_t)bufferInfo.size);
+	device.unmapMemory(bufferMemory);
 }
 
 void GPUVertexBuffer::cleanup(const Device &device) {

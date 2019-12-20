@@ -1,7 +1,7 @@
 #include "GPUCommandBuffer.h"
 #include "../components/VulkanStructs.h"
 
-void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline) {
+void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain &swapChain, const GraphicsPipeline &pipeline, const GPUVertexBuffer &vertexBuffer) {
 	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
 	CommandBufferAllocateInfo allocInfo(commandPool, CommandBufferLevel::ePrimary, commandBuffers.size());
 	try {
@@ -21,7 +21,12 @@ void GPUCommandBuffer::createCommandBuffer(const Device &device, const SwapChain
 				Rect2D({0, 0}, swapChain.swapChainExtent), 1, &clearColor);
 		commandBuffers[i].beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
 		commandBuffers[i].bindPipeline(PipelineBindPoint::eGraphics, pipeline.graphicsPipeline);
-		commandBuffers[i].draw(3, 1, 0, 0);
+
+		Buffer vertexBuffers[] = {vertexBuffer.buffer};
+		DeviceSize offsets[] = {0};
+		commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
+
+		commandBuffers[i].draw(vertices.size(), 1, 0, 0);
 		commandBuffers[i].endRenderPass();
 		try {
 			commandBuffers[i].end();

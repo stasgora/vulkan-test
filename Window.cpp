@@ -45,7 +45,7 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	swapChain.createImageViews(*deviceManager.device);
 	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
-	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline);
+	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer);
 }
 
 void Window::createSurface() {
@@ -96,6 +96,7 @@ void Window::cleanup() {
 
 	renderer.cleanup(*deviceManager.device);
 	commandBuffer.cleanup(*deviceManager.device);
+	vertexBuffer.cleanup(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);
