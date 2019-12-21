@@ -15,11 +15,6 @@ void vkr::Pipeline::createFrameBuffers(const vk::Device &device, const vk::Exten
 	}
 }
 
-void vkr::Pipeline::setupPipeline(const vk::Device &device, const vk::Extent2D &extent, const vk::Format &format) {
-	createRenderPass(device, format);
-	createGraphicsPipeline(device, extent);
-}
-
 void vkr::Pipeline::createRenderPass(const vk::Device &device, const vk::Format &format) {
 	vk::AttachmentDescription colorAttachment;
 	colorAttachment.format = format;
@@ -42,7 +37,7 @@ void vkr::Pipeline::createRenderPass(const vk::Device &device, const vk::Format 
 	}
 }
 
-void vkr::Pipeline::createGraphicsPipeline(const vk::Device &device, const vk::Extent2D &extent) {
+void vkr::Pipeline::createGraphicsPipeline(const vk::Device &device, const vk::Extent2D &extent, const vk::DescriptorSetLayout &descriptorSetLayout) {
 	auto vertexShaderModule = createShaderModule(readFile("../shaders/vert.spv"), device);
 	auto fragmentShaderModule = createShaderModule(readFile("../shaders/frag.spv"), device);
 
@@ -70,6 +65,8 @@ void vkr::Pipeline::createGraphicsPipeline(const vk::Device &device, const vk::E
 	colorBlending.attachmentCount = 1;
 	colorBlending.pAttachments = &colorBlendAttachment;
 	vk::PipelineLayoutCreateInfo pipelineLayoutInfo;
+	pipelineLayoutInfo.setLayoutCount = 1;
+	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 	try {
 		pipelineLayout = device.createPipelineLayout(pipelineLayoutInfo);
 	} catch (vk::SystemError &err) {

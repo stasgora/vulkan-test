@@ -9,7 +9,8 @@
 namespace vkr {
 	class Pipeline {
 	public:
-		void setupPipeline(const vk::Device &device, const vk::Extent2D &extent, const vk::Format &format);
+		void createRenderPass(const vk::Device &device, const vk::Format &format);
+		void createGraphicsPipeline(const vk::Device &device, const vk::Extent2D &extent, const vk::DescriptorSetLayout &layout);
 		void createFrameBuffers(const vk::Device &device, const vk::Extent2D &extent, const std::vector<vk::ImageView> &imageViews);
 		void cleanup(const vk::Device &device);
 
@@ -17,9 +18,6 @@ namespace vkr {
 		vk::RenderPass renderPass;
 		vk::Pipeline graphicsPipeline;
 	private:
-		void createRenderPass(const vk::Device &device, const vk::Format &format);
-		void createGraphicsPipeline(const vk::Device &device, const vk::Extent2D &extent);
-
 		static vk::UniqueShaderModule createShaderModule(const std::vector<char> &code, const vk::Device &device);
 		static std::vector<char> readFile(const std::string &fileName);
 

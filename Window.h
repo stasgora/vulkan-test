@@ -10,6 +10,7 @@
 #include "rendering/Pipeline.h"
 #include "buffers/CommandBuffer.h"
 #include "rendering/Renderer.h"
+#include "descriptors/DescriptorSetLayout.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -47,6 +48,7 @@ private:
 	vk::UniqueInstance instance;
 	vk::SurfaceKHR surface;
 
+	vkr::DescriptorSetLayout descriptorSetLayout;
 	vkr::Pipeline pipeline;
 	vkr::CommandBuffer commandBuffer;
 	vkr::Buffer<vkr::Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance

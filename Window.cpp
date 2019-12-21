@@ -30,6 +30,7 @@ void Window::init() {
 	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
 	vertexBuffer.createDataBuffer(deviceManager);
 	indexBuffer.createDataBuffer(deviceManager);
+	descriptorSetLayout.createDescriptorSetLayout(*deviceManager.device);
 	sizeDependentWindowSetup();
 	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
 }
@@ -45,7 +46,8 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	}
 	swapChain.createSwapChain(deviceManager, surface, size);
 	swapChain.createImageViews(*deviceManager.device);
-	pipeline.setupPipeline(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainFormat);
+	pipeline.createRenderPass(*deviceManager.device, swapChain.swapChainFormat);
+	pipeline.createGraphicsPipeline(*deviceManager.device, swapChain.swapChainExtent, descriptorSetLayout.descriptorSetLayout);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
 	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer.buffer, indexBuffer.buffer);
 }
@@ -100,6 +102,7 @@ void Window::cleanup() {
 	commandBuffer.cleanup(*deviceManager.device);
 	vertexBuffer.cleanup(*deviceManager.device);
 	indexBuffer.cleanup(*deviceManager.device);
+	descriptorSetLayout.cleanup(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);
