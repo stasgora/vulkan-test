@@ -5,13 +5,11 @@
 #include <GLFW/glfw3.h>
 
 #include "components/DebugLayer.h"
-#include "components/GPUDeviceManager.h"
+#include "components/DeviceManager.h"
 #include "components/SwapChain.h"
-#include "rendering/GraphicsPipeline.h"
-#include "buffers/GPUCommandBuffer.h"
-#include "rendering/GraphicsRenderer.h"
-
-using namespace vk;
+#include "rendering/Pipeline.h"
+#include "buffers/CommandBuffer.h"
+#include "rendering/Renderer.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -46,16 +44,16 @@ private:
 
 	vkr::WindowSize size;
 	GLFWwindow* window;
-	UniqueInstance instance;
-	SurfaceKHR surface;
+	vk::UniqueInstance instance;
+	vk::SurfaceKHR surface;
 
-	vkr::GraphicsPipeline pipeline;
-	vkr::GPUCommandBuffer commandBuffer;
-	vkr::GPUBuffer<vkr::Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
-	vkr::GPUBuffer<uint16_t> indexBuffer;
-	vkr::GraphicsRenderer renderer;
+	vkr::Pipeline pipeline;
+	vkr::CommandBuffer commandBuffer;
+	vkr::Buffer<vkr::Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
+	vkr::Buffer<uint16_t> indexBuffer;
+	vkr::Renderer renderer;
 
-	vkr::GPUDeviceManager deviceManager;
+	vkr::DeviceManager deviceManager;
 	vkr::SwapChain swapChain;
 	vkr::DebugLayer debugLayer;
 };

@@ -2,7 +2,6 @@
 #define TEST_DEBUGLAYER_H
 
 #include <vulkan/vulkan.hpp>
-using namespace vk;
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -17,7 +16,7 @@ namespace vkr {
 		void cleanup(const VkInstance &instance);
 
 		bool checkValidationLayerSupport();
-		void createDebugMessengerInfo(DebugUtilsMessengerCreateInfoEXT& info);
+		void createDebugMessengerInfo(vk::DebugUtilsMessengerCreateInfoEXT& info);
 
 	private:
 		static VkResult CreateDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,

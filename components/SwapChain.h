@@ -3,28 +3,27 @@
 
 #include <vulkan/vulkan.hpp>
 #include "VulkanStructs.h"
-#include "GPUDeviceManager.h"
+#include "DeviceManager.h"
 
-using namespace vk;
 
 namespace vkr {
 	class SwapChain {
 	public:
-		void createSwapChain(const GPUDeviceManager &deviceManager, const SurfaceKHR &surface, const WindowSize size);
-		void createImageViews(const Device &device);
-		void cleanup(const Device &device);
+		void createSwapChain(const DeviceManager &deviceManager, const vk::SurfaceKHR &surface, const WindowSize size);
+		void createImageViews(const vk::Device &device);
+		void cleanup(const vk::Device &device);
 
-		SwapchainKHR swapChain;
-		Extent2D swapChainExtent;
-		Format swapChainFormat;
-		std::vector<ImageView> swapChainImageViews;
-		std::vector<Image> swapChainImages;
+		vk::SwapchainKHR swapChain;
+		vk::Extent2D swapChainExtent;
+		vk::Format swapChainFormat;
+		std::vector<vk::ImageView> swapChainImageViews;
+		std::vector<vk::Image> swapChainImages;
 	private:
-		SwapchainCreateInfoKHR createSwapChainInfo(const SwapChainSupportDetails &swapChainSupport, const QueueFamilyIndices &indices, const SurfaceKHR &surface);
+		vk::SwapchainCreateInfoKHR createSwapChainInfo(const SwapChainSupportDetails &swapChainSupport, const QueueFamilyIndices &indices, const vk::SurfaceKHR &surface);
 
-		SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR>& availableFormats);
-		PresentModeKHR choosePresentMode(const std::vector<PresentModeKHR>& availablePresentModes);
-		Extent2D chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, const WindowSize size);
+		vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
+		vk::PresentModeKHR choosePresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
+		vk::Extent2D chooseSwapExtent(const vk::SurfaceCapabilitiesKHR &capabilities, const WindowSize size);
 	};
 }
 

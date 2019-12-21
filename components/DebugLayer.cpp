@@ -5,7 +5,7 @@
 void vkr::DebugLayer::init(const VkInstance &instance) {
 	if (!enableValidationLayers)
 		return;
-	DebugUtilsMessengerCreateInfoEXT createInfo;
+	vk::DebugUtilsMessengerCreateInfoEXT createInfo;
 	createDebugMessengerInfo(createInfo);
 	if (CreateDebugUtilsMessengerEXT(instance, reinterpret_cast<const VkDebugUtilsMessengerCreateInfoEXT*>(&createInfo), nullptr, &callback) != VK_SUCCESS) {
 		throw std::runtime_error("failed to set up debug callback!");
@@ -15,7 +15,7 @@ void vkr::DebugLayer::init(const VkInstance &instance) {
 bool vkr::DebugLayer::checkValidationLayerSupport() {
 	if (!enableValidationLayers)
 		return true;
-	auto availableLayers = enumerateInstanceLayerProperties();
+	auto availableLayers = vk::enumerateInstanceLayerProperties();
 	for(auto layerName : validationLayers){
 		bool layerFound = false;
 
@@ -59,11 +59,11 @@ void vkr::DebugLayer::DestroyDebugUtilsMessengerEXT(const VkInstance &instance, 
 	}
 }
 
-void vkr::DebugLayer::createDebugMessengerInfo(DebugUtilsMessengerCreateInfoEXT &info) {
-	info = DebugUtilsMessengerCreateInfoEXT(
-			DebugUtilsMessengerCreateFlagsEXT(),
-			DebugUtilsMessageSeverityFlagBitsEXT::eVerbose | DebugUtilsMessageSeverityFlagBitsEXT::eWarning | DebugUtilsMessageSeverityFlagBitsEXT::eError,
-			DebugUtilsMessageTypeFlagBitsEXT::eGeneral | DebugUtilsMessageTypeFlagBitsEXT::eValidation | DebugUtilsMessageTypeFlagBitsEXT::ePerformance,
+void vkr::DebugLayer::createDebugMessengerInfo(vk::DebugUtilsMessengerCreateInfoEXT &info) {
+	info = vk::DebugUtilsMessengerCreateInfoEXT(
+			vk::DebugUtilsMessengerCreateFlagsEXT(),
+			vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose | vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning | vk::DebugUtilsMessageSeverityFlagBitsEXT::eError,
+			vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral | vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation | vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance,
 			debugCallback, nullptr
 	);
 }

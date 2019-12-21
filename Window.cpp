@@ -3,8 +3,8 @@
 
 Window::Window()
 : size({WIDTH, HEIGHT}),
-vertexBuffer(vertices, BufferUsageFlagBits::eVertexBuffer),
-indexBuffer(indices, BufferUsageFlagBits::eIndexBuffer) {}
+vertexBuffer(vertices, vk::BufferUsageFlagBits::eVertexBuffer),
+indexBuffer(indices, vk::BufferUsageFlagBits::eIndexBuffer) {}
 
 Window::~Window() {
 	cleanup();
@@ -61,15 +61,15 @@ void Window::createInstance() {
 	if (!debugLayer.checkValidationLayerSupport())
 		throw std::runtime_error("validation layers requested, but not available!");
 
-	ApplicationInfo appInfo("Test", VK_MAKE_VERSION(1, 0, 0),
+	vk::ApplicationInfo appInfo("Test", VK_MAKE_VERSION(1, 0, 0),
 			"None", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
 
 	std::vector<const char *> extensions;
 	getRequiredExtensions(extensions);
-	auto createInfo = InstanceCreateInfo(InstanceCreateFlags(), &appInfo, 0,
+	auto createInfo = vk::InstanceCreateInfo(vk::InstanceCreateFlags(), &appInfo, 0,
 			nullptr, static_cast<uint32_t>(extensions.size()), extensions.data());
 
-	DebugUtilsMessengerCreateInfoEXT debugInfo;
+	vk::DebugUtilsMessengerCreateInfoEXT debugInfo;
 	if (enableValidationLayers) {
 		createInfo.enabledLayerCount = static_cast<uint32_t>(vkr::validationLayers.size());
 		createInfo.ppEnabledLayerNames = vkr::validationLayers.data();
@@ -78,7 +78,7 @@ void Window::createInstance() {
 	}
 	try {
 		instance = createInstanceUnique(createInfo, nullptr);
-	} catch (SystemError &err) {
+	} catch (vk::SystemError &err) {
 		throw std::runtime_error("failed to create instance!");
 	}
 }
