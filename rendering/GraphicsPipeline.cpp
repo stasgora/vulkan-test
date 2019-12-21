@@ -2,7 +2,7 @@
 #include "../components/VulkanStructs.h"
 #include <fstream>
 
-void GraphicsPipeline::createFrameBuffers(const Device &device, const Extent2D &extent, const std::vector<ImageView> &imageViews) {
+void vkr::GraphicsPipeline::createFrameBuffers(const Device &device, const Extent2D &extent, const std::vector<ImageView> &imageViews) {
 	swapChainFramebuffers.resize(imageViews.size());
 	for (int i = 0; i < imageViews.size(); ++i) {
 		ImageView attachments[] = {imageViews[i]};
@@ -15,12 +15,12 @@ void GraphicsPipeline::createFrameBuffers(const Device &device, const Extent2D &
 	}
 }
 
-void GraphicsPipeline::setupPipeline(const Device &device, const Extent2D &extent, const Format &format) {
+void vkr::GraphicsPipeline::setupPipeline(const Device &device, const Extent2D &extent, const Format &format) {
 	createRenderPass(device, format);
 	createGraphicsPipeline(device, extent);
 }
 
-void GraphicsPipeline::createRenderPass(const Device &device, const Format &format) {
+void vkr::GraphicsPipeline::createRenderPass(const Device &device, const Format &format) {
 	AttachmentDescription colorAttachment;
 	colorAttachment.format = format;
 	colorAttachment.loadOp = AttachmentLoadOp::eClear;
@@ -42,7 +42,7 @@ void GraphicsPipeline::createRenderPass(const Device &device, const Format &form
 	}
 }
 
-void GraphicsPipeline::createGraphicsPipeline(const Device &device, const Extent2D &extent) {
+void vkr::GraphicsPipeline::createGraphicsPipeline(const Device &device, const Extent2D &extent) {
 	auto vertexShaderModule = createShaderModule(readFile("../shaders/vert.spv"), device);
 	auto fragmentShaderModule = createShaderModule(readFile("../shaders/frag.spv"), device);
 
@@ -50,8 +50,8 @@ void GraphicsPipeline::createGraphicsPipeline(const Device &device, const Extent
 			{ PipelineShaderStageCreateFlags(), ShaderStageFlagBits::eVertex, *vertexShaderModule, "main" },
 			{ PipelineShaderStageCreateFlags(), ShaderStageFlagBits::eFragment, *fragmentShaderModule, "main" }
 	};
-	auto attributeDescriptions = Vertex::getAttributeDescriptions();
-	auto bindingDescriptions = Vertex::getBindingDescription();
+	auto attributeDescriptions = vkr::Vertex::getAttributeDescriptions();
+	auto bindingDescriptions = vkr::Vertex::getBindingDescription();
 	PipelineVertexInputStateCreateInfo vertexInputInfo(PipelineVertexInputStateCreateFlags(), 1,
 			&bindingDescriptions, static_cast<uint32_t>(attributeDescriptions.size()), attributeDescriptions.data());
 	PipelineInputAssemblyStateCreateInfo inputAssembly = {};
@@ -85,7 +85,7 @@ void GraphicsPipeline::createGraphicsPipeline(const Device &device, const Extent
 	}
 }
 
-std::vector<char> GraphicsPipeline::readFile(const std::string &fileName) {
+std::vector<char> vkr::GraphicsPipeline::readFile(const std::string &fileName) {
 	std::ifstream file(fileName, std::ios::ate | std::ios::binary);
 	if(!file.is_open())
 		throw std::runtime_error("failed to open file " + fileName);
@@ -97,7 +97,7 @@ std::vector<char> GraphicsPipeline::readFile(const std::string &fileName) {
 	return buffer;
 }
 
-UniqueShaderModule GraphicsPipeline::createShaderModule(const std::vector<char> &code, const Device &device) {
+UniqueShaderModule vkr::GraphicsPipeline::createShaderModule(const std::vector<char> &code, const Device &device) {
 	ShaderModuleCreateInfo createInfo(ShaderModuleCreateFlags(), code.size(), reinterpret_cast<const u_int32_t*>(code.data()));
 	try {
 		return device.createShaderModuleUnique(createInfo);
@@ -106,7 +106,7 @@ UniqueShaderModule GraphicsPipeline::createShaderModule(const std::vector<char> 
 	}
 }
 
-void GraphicsPipeline::cleanup(const Device &device) {
+void vkr::GraphicsPipeline::cleanup(const Device &device) {
 	for (const auto &buffer : swapChainFramebuffers)
 		device.destroyFramebuffer(buffer);
 	swapChainFramebuffers.clear();

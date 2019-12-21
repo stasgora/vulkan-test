@@ -1,8 +1,6 @@
 #include "Window.h"
 #include <iostream>
 
-using namespace std;
-
 Window::Window()
 : size({WIDTH, HEIGHT}),
 vertexBuffer(vertices, BufferUsageFlagBits::eVertexBuffer),
@@ -61,27 +59,27 @@ void Window::createSurface() {
 
 void Window::createInstance() {
 	if (!debugLayer.checkValidationLayerSupport())
-		throw runtime_error("validation layers requested, but not available!");
+		throw std::runtime_error("validation layers requested, but not available!");
 
 	ApplicationInfo appInfo("Test", VK_MAKE_VERSION(1, 0, 0),
 			"None", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
 
-	vector<const char *> extensions;
+	std::vector<const char *> extensions;
 	getRequiredExtensions(extensions);
 	auto createInfo = InstanceCreateInfo(InstanceCreateFlags(), &appInfo, 0,
 			nullptr, static_cast<uint32_t>(extensions.size()), extensions.data());
 
 	DebugUtilsMessengerCreateInfoEXT debugInfo;
 	if (enableValidationLayers) {
-		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-		createInfo.ppEnabledLayerNames = validationLayers.data();
+		createInfo.enabledLayerCount = static_cast<uint32_t>(vkr::validationLayers.size());
+		createInfo.ppEnabledLayerNames = vkr::validationLayers.data();
 		debugLayer.createDebugMessengerInfo(debugInfo);
 		createInfo.pNext = &debugInfo;
 	}
 	try {
 		instance = createInstanceUnique(createInfo, nullptr);
 	} catch (SystemError &err) {
-		throw runtime_error("failed to create instance!");
+		throw std::runtime_error("failed to create instance!");
 	}
 }
 
@@ -116,7 +114,7 @@ void Window::sizeDependentWindowCleanup() {
 	swapChain.cleanup(*deviceManager.device);
 }
 
-void Window::getRequiredExtensions(vector<const char *>& extensions) {
+void Window::getRequiredExtensions(std::vector<const char *>& extensions) {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions;
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);

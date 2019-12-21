@@ -16,7 +16,7 @@ using namespace vk;
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
-const std::vector<Vertex> vertices = {
+const std::vector<vkr::Vertex> vertices = {
 		{{-0.5f, -0.5f}, {0.2f, 0.0f, 0.8f}},
 		{{0.5f, -0.5f}, {0.0f, 0.4f, 0.9f}},
 		{{0.5f, 0.5f}, {0.2f, 0.8f, 1.0f}},
@@ -44,20 +44,20 @@ private:
 	void sizeDependentWindowCleanup();
 	void cleanup();
 
-	WindowSize size;
+	vkr::WindowSize size;
 	GLFWwindow* window;
 	UniqueInstance instance;
 	SurfaceKHR surface;
 
-	GraphicsPipeline pipeline;
-	GPUCommandBuffer commandBuffer;
-	GPUBuffer<Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
-	GPUBuffer<uint16_t> indexBuffer;
-	GraphicsRenderer renderer;
+	vkr::GraphicsPipeline pipeline;
+	vkr::GPUCommandBuffer commandBuffer;
+	vkr::GPUBuffer<vkr::Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
+	vkr::GPUBuffer<uint16_t> indexBuffer;
+	vkr::GraphicsRenderer renderer;
 
-	GPUDeviceManager deviceManager;
-	SwapChain swapChain;
-	DebugLayer debugLayer;
+	vkr::GPUDeviceManager deviceManager;
+	vkr::SwapChain swapChain;
+	vkr::DebugLayer debugLayer;
 };
 
 

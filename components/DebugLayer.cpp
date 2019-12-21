@@ -1,9 +1,8 @@
 #include "DebugLayer.h"
 
 #include <iostream>
-using namespace std;
 
-void DebugLayer::init(const VkInstance &instance) {
+void vkr::DebugLayer::init(const VkInstance &instance) {
 	if (!enableValidationLayers)
 		return;
 	DebugUtilsMessengerCreateInfoEXT createInfo;
@@ -13,7 +12,7 @@ void DebugLayer::init(const VkInstance &instance) {
 	}
 }
 
-bool DebugLayer::checkValidationLayerSupport() {
+bool vkr::DebugLayer::checkValidationLayerSupport() {
 	if (!enableValidationLayers)
 		return true;
 	auto availableLayers = enumerateInstanceLayerProperties();
@@ -32,15 +31,15 @@ bool DebugLayer::checkValidationLayerSupport() {
 	return true;
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL DebugLayer::debugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-                                                         const VkDebugUtilsMessageTypeFlagsEXT messageType,
-                                                     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
-	cerr << "validation layer: " << pCallbackData->pMessage << endl;
+VKAPI_ATTR VkBool32 VKAPI_CALL vkr::DebugLayer::debugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                                                              const VkDebugUtilsMessageTypeFlagsEXT messageType,
+                                                              const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+	std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 	return VK_FALSE;
 }
 
-VkResult DebugLayer::CreateDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-		const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback) {
+VkResult vkr::DebugLayer::CreateDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+                                                       const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback) {
 	if (!enableValidationLayers)
 		return VK_SUCCESS;
 	auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
@@ -51,7 +50,7 @@ VkResult DebugLayer::CreateDebugUtilsMessengerEXT(const VkInstance &instance, co
 	}
 }
 
-void DebugLayer::DestroyDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator) {
+void vkr::DebugLayer::DestroyDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator) {
 	if (!enableValidationLayers)
 		return;
 	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
@@ -60,7 +59,7 @@ void DebugLayer::DestroyDebugUtilsMessengerEXT(const VkInstance &instance, const
 	}
 }
 
-void DebugLayer::createDebugMessengerInfo(DebugUtilsMessengerCreateInfoEXT &info) {
+void vkr::DebugLayer::createDebugMessengerInfo(DebugUtilsMessengerCreateInfoEXT &info) {
 	info = DebugUtilsMessengerCreateInfoEXT(
 			DebugUtilsMessengerCreateFlagsEXT(),
 			DebugUtilsMessageSeverityFlagBitsEXT::eVerbose | DebugUtilsMessageSeverityFlagBitsEXT::eWarning | DebugUtilsMessageSeverityFlagBitsEXT::eError,
@@ -69,6 +68,6 @@ void DebugLayer::createDebugMessengerInfo(DebugUtilsMessengerCreateInfoEXT &info
 	);
 }
 
-void DebugLayer::cleanup(const VkInstance &instance) {
+void vkr::DebugLayer::cleanup(const VkInstance &instance) {
 	DestroyDebugUtilsMessengerEXT(instance, callback, nullptr);
 }

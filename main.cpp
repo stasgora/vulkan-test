@@ -1,14 +1,12 @@
 #include <iostream>
 #include "Window.h"
 
-using namespace std;
-
 int main() {
 	Window window;
 	try {
 		window.run();
-	} catch (const exception& e) {
-		cerr << e.what() << endl;
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
 		return EXIT_FAILURE;
 	}
 

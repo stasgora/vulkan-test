@@ -1,13 +1,14 @@
 #include <set>
 #include "GPUDeviceManager.h"
 #include "DebugLayer.h"
+#include "VulkanStructs.h"
 
-void GPUDeviceManager::setupDevice(const Instance &instance, const SurfaceKHR &surface) {
+void vkr::GPUDeviceManager::setupDevice(const Instance &instance, const SurfaceKHR &surface) {
 	pickPhysicalDevice(instance, surface);
 	createLogicalDevice(surface);
 }
 
-void GPUDeviceManager::createLogicalDevice(const SurfaceKHR &surface) {
+void vkr::GPUDeviceManager::createLogicalDevice(const SurfaceKHR &surface) {
 	queueFamilyIndices = findQueueFamilies(physicalDevice, surface);
 	std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { queueFamilyIndices.graphicsFamily.value(), queueFamilyIndices.presentFamily.value() };
@@ -23,8 +24,8 @@ void GPUDeviceManager::createLogicalDevice(const SurfaceKHR &surface) {
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 	if (enableValidationLayers) {
-		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-		createInfo.ppEnabledLayerNames = validationLayers.data();
+		createInfo.enabledLayerCount = static_cast<uint32_t>(vkr::validationLayers.size());
+		createInfo.ppEnabledLayerNames = vkr::validationLayers.data();
 	}
 	try {
 		device = physicalDevice.createDeviceUnique(createInfo);
@@ -35,7 +36,7 @@ void GPUDeviceManager::createLogicalDevice(const SurfaceKHR &surface) {
 	presentQueue = device->getQueue(queueFamilyIndices.presentFamily.value(), 0);
 }
 
-void GPUDeviceManager::pickPhysicalDevice(const Instance &instance, const SurfaceKHR &surface) {
+void vkr::GPUDeviceManager::pickPhysicalDevice(const Instance &instance, const SurfaceKHR &surface) {
 	auto devices = instance.enumeratePhysicalDevices();
 	if (devices.empty())
 		throw std::runtime_error("failed to find GPUs with Vulkan support!");
@@ -51,7 +52,7 @@ void GPUDeviceManager::pickPhysicalDevice(const Instance &instance, const Surfac
 	memoryProperties = physicalDevice.getMemoryProperties();
 }
 
-bool GPUDeviceManager::isDeviceSuitable(const PhysicalDevice &device, const SurfaceKHR &surface) {
+bool vkr::GPUDeviceManager::isDeviceSuitable(const PhysicalDevice &device, const SurfaceKHR &surface) {
 	QueueFamilyIndices indices = findQueueFamilies(device, surface);
 	bool extensionsSupported = checkDeviceExtensionSupport(device);
 	bool swapChainAdequate = false;
@@ -62,7 +63,7 @@ bool GPUDeviceManager::isDeviceSuitable(const PhysicalDevice &device, const Surf
 	return indices.isComplete() && extensionsSupported && swapChainAdequate;
 }
 
-SwapChainSupportDetails GPUDeviceManager::querySwapChainSupport(const PhysicalDevice &device, const SurfaceKHR &surface) {
+vkr::SwapChainSupportDetails vkr::GPUDeviceManager::querySwapChainSupport(const PhysicalDevice &device, const SurfaceKHR &surface) {
 	SwapChainSupportDetails details;
 	details.capabilities = device.getSurfaceCapabilitiesKHR(surface);
 	details.formats = device.getSurfaceFormatsKHR(surface);
@@ -70,14 +71,14 @@ SwapChainSupportDetails GPUDeviceManager::querySwapChainSupport(const PhysicalDe
 	return details;
 }
 
-bool GPUDeviceManager::checkDeviceExtensionSupport(const PhysicalDevice &device) {
+bool vkr::GPUDeviceManager::checkDeviceExtensionSupport(const PhysicalDevice &device) {
 	std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 	for (const auto& extension : device.enumerateDeviceExtensionProperties())
 		requiredExtensions.erase(extension.extensionName);
 	return requiredExtensions.empty();
 }
 
-QueueFamilyIndices GPUDeviceManager::findQueueFamilies(const PhysicalDevice &device, const SurfaceKHR &surface) {
+vkr::QueueFamilyIndices vkr::GPUDeviceManager::findQueueFamilies(const PhysicalDevice &device, const SurfaceKHR &surface) {
 	QueueFamilyIndices indices;
 	auto queueFamilies = device.getQueueFamilyProperties();
 

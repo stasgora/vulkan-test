@@ -1,7 +1,9 @@
 #include "SwapChain.h"
+#include "GPUDeviceManager.h"
+#include "VulkanStructs.h"
 
-void SwapChain::createSwapChain(const GPUDeviceManager &deviceManager, const SurfaceKHR &surface, const WindowSize size) {
-	SwapChainSupportDetails swapChainSupport = GPUDeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
+void vkr::SwapChain::createSwapChain(const vkr::GPUDeviceManager &deviceManager, const SurfaceKHR &surface, const WindowSize size) {
+	SwapChainSupportDetails swapChainSupport = vkr::GPUDeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
 	swapChainExtent = chooseSwapExtent(swapChainSupport.capabilities, size);
 	SwapchainCreateInfoKHR createInfo = createSwapChainInfo(swapChainSupport, deviceManager.queueFamilyIndices, surface);
 	Device device = *deviceManager.device;
@@ -14,7 +16,7 @@ void SwapChain::createSwapChain(const GPUDeviceManager &deviceManager, const Sur
 	swapChainFormat = createInfo.imageFormat;
 }
 
-SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(const SwapChainSupportDetails &swapChainSupport, const QueueFamilyIndices& indices, const SurfaceKHR &surface) {
+SwapchainCreateInfoKHR vkr::SwapChain::createSwapChainInfo(const SwapChainSupportDetails &swapChainSupport, const QueueFamilyIndices& indices, const SurfaceKHR &surface) {
 	const PresentModeKHR presentMode = choosePresentMode(swapChainSupport.presentModes);
 	const SurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
@@ -38,7 +40,7 @@ SwapchainCreateInfoKHR SwapChain::createSwapChainInfo(const SwapChainSupportDeta
 	return createInfo;
 }
 
-void SwapChain::createImageViews(const Device &device) {
+void vkr::SwapChain::createImageViews(const Device &device) {
 	swapChainImageViews.reserve(swapChainImages.size());
 	for (int i = 0; i < swapChainImages.size(); ++i) {
 		ImageViewCreateInfo createInfo(ImageViewCreateFlags(), swapChainImages[i], ImageViewType::e2D, swapChainFormat);
@@ -53,14 +55,14 @@ void SwapChain::createImageViews(const Device &device) {
 	}
 }
 
-SurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR> &availableFormats) {
+SurfaceFormatKHR vkr::SwapChain::chooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR> &availableFormats) {
 	for (const auto& availableFormat : availableFormats)
 		if (availableFormat.format == Format::eB8G8R8A8Unorm && availableFormat.colorSpace == ColorSpaceKHR::eSrgbNonlinear)
 			return availableFormat;
 	return availableFormats[0];
 }
 
-PresentModeKHR SwapChain::choosePresentMode(const std::vector<PresentModeKHR> &availablePresentModes) {
+PresentModeKHR vkr::SwapChain::choosePresentMode(const std::vector<PresentModeKHR> &availablePresentModes) {
 	PresentModeKHR bestMode = PresentModeKHR::eFifo;
 	for (const auto &mode : availablePresentModes)
 		if (mode == PresentModeKHR::eMailbox)
@@ -68,7 +70,7 @@ PresentModeKHR SwapChain::choosePresentMode(const std::vector<PresentModeKHR> &a
 	return bestMode;
 }
 
-Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, const WindowSize size) {
+Extent2D vkr::SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities, const WindowSize size) {
 	if (capabilities.currentExtent.width != UINT32_MAX)
 		return capabilities.currentExtent;
 	Extent2D actualExtent = {static_cast<uint32_t>(size.width), static_cast<uint32_t>(size.height)};
@@ -77,7 +79,7 @@ Extent2D SwapChain::chooseSwapExtent(const SurfaceCapabilitiesKHR &capabilities,
 	return actualExtent;
 }
 
-void SwapChain::cleanup(const Device &device) {
+void vkr::SwapChain::cleanup(const Device &device) {
 	for (const auto &imageView : swapChainImageViews)
 		device.destroyImageView(imageView);
 	swapChainImageViews.clear();

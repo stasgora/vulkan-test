@@ -2,7 +2,7 @@
 #include "GPUCommandBuffer.h"
 
 
-template<class T> void GPUBuffer<T>::createDataBuffer(const GPUDeviceManager &deviceManager) {
+template<class T> void vkr::GPUBuffer<T>::createDataBuffer(const GPUDeviceManager &deviceManager) {
 	Buffer stagingBuffer;
 	DeviceMemory stagingBufferMemory;
 	const Device &device = *deviceManager.device;
@@ -21,8 +21,8 @@ template<class T> void GPUBuffer<T>::createDataBuffer(const GPUDeviceManager &de
 	device.freeMemory(stagingBufferMemory);
 }
 
-template<class T> void GPUBuffer<T>::createBuffer(const GPUDeviceManager &deviceManager, DeviceSize size, const BufferUsageFlags& usage,
-                                const MemoryPropertyFlags& properties, Buffer &buffer, DeviceMemory &memory) {
+template<class T> void vkr::GPUBuffer<T>::createBuffer(const GPUDeviceManager &deviceManager, DeviceSize size, const BufferUsageFlags& usage,
+                                                       const MemoryPropertyFlags& properties, Buffer &buffer, DeviceMemory &memory) {
 	const Device &device = *deviceManager.device;
 	BufferCreateInfo bufferInfo(BufferCreateFlags(), size, usage, SharingMode::eExclusive);
 	try {
@@ -41,7 +41,7 @@ template<class T> void GPUBuffer<T>::createBuffer(const GPUDeviceManager &device
 	device.bindBufferMemory(buffer, memory, 0);
 }
 
-template<class T> void GPUBuffer<T>::copyBuffer(const Buffer &srcBuffer, const Buffer &dstBuffer, DeviceSize size, const GPUDeviceManager &deviceManager) {
+template<class T> void vkr::GPUBuffer<T>::copyBuffer(const Buffer &srcBuffer, const Buffer &dstBuffer, DeviceSize size, const GPUDeviceManager &deviceManager) {
 	CommandPool bufferTransferCommandPool;
 	const Device &device = *deviceManager.device;
 	GPUCommandBuffer::createCommandPool(bufferTransferCommandPool, CommandPoolCreateFlagBits::eTransient, device, deviceManager.queueFamilyIndices);
@@ -63,16 +63,16 @@ template<class T> void GPUBuffer<T>::copyBuffer(const Buffer &srcBuffer, const B
 	device.destroyCommandPool(bufferTransferCommandPool);
 }
 
-template<class T> uint32_t GPUBuffer<T>::findMemoryType(uint32_t typeFilter, const MemoryPropertyFlags& properties, const PhysicalDeviceMemoryProperties &memoryProperties) {
+template<class T> uint32_t vkr::GPUBuffer<T>::findMemoryType(uint32_t typeFilter, const MemoryPropertyFlags& properties, const PhysicalDeviceMemoryProperties &memoryProperties) {
 	for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
 		if ((typeFilter & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
 			return i;
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-template<class T> void GPUBuffer<T>::cleanup(const Device &device) {
+template<class T> void vkr::GPUBuffer<T>::cleanup(const Device &device) {
 	device.destroyBuffer(buffer);
 	device.freeMemory(bufferMemory);
 }
 
-template<class T> GPUBuffer<T>::GPUBuffer(const std::vector<T> &data, const BufferUsageFlagBits &usage):data(data), usage(usage) {}
+template<class T> vkr::GPUBuffer<T>::GPUBuffer(const std::vector<T> &data, const BufferUsageFlagBits &usage):data(data), usage(usage) {}
