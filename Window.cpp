@@ -28,6 +28,7 @@ void Window::init() {
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
 	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
+	textureImage.createTextureImage(deviceManager);
 	vertexBuffer.createDataBuffer(deviceManager);
 	indexBuffer.createDataBuffer(deviceManager);
 	descriptorSet.createDescriptorSetLayout(*deviceManager.device);

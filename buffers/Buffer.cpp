@@ -10,7 +10,7 @@ template<class T> void vkr::Buffer<T>::createDataBuffer(const DeviceManager &dev
 	const vk::Device &device = *deviceManager.device;
 	vk::DeviceSize bufferSize = sizeof(data[0]) * data.size();
 	createBuffer(deviceManager, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, STANDARD_PROPERTIES, stagingBuffer, stagingBufferMemory);
-	copyBufferData(stagingBufferMemory, data.data(), device, bufferSize);
+	copyBufferData(device, stagingBufferMemory, data.data(), bufferSize);
 
 	vk::BufferUsageFlags bufferUsage = vk::BufferUsageFlagBits::eTransferDst | usage;
 	createBuffer(deviceManager, bufferSize, bufferUsage, vk::MemoryPropertyFlagBits::eDeviceLocal, buffer, bufferMemory);

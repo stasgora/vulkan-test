@@ -12,6 +12,7 @@
 #include "rendering/Renderer.h"
 #include "buffers/UniformBuffer.h"
 #include "components/DescriptorSet.h"
+#include "textures/TextureImage.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -48,6 +49,7 @@ private:
 	GLFWwindow* window;
 	vk::UniqueInstance instance;
 	vk::SurfaceKHR surface;
+	vkr::TextureImage textureImage;
 
 	vkr::DescriptorSet descriptorSet;
 	vkr::Pipeline pipeline;

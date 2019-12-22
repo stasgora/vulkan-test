@@ -51,7 +51,7 @@ uint32_t vkr::AbstractBuffer::findMemoryType(uint32_t typeFilter, const vk::Memo
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void vkr::AbstractBuffer::copyBufferData(vk::DeviceMemory &bufferMemory, const void *data, const vk::Device &device, const size_t size) {
+void vkr::AbstractBuffer::copyBufferData(const vk::Device &device, vk::DeviceMemory &bufferMemory, const void *data, const size_t size) {
 	void* bufferData = device.mapMemory(bufferMemory, 0, size); //TODO use VulkanMemoryAllocator to allocate memory
 	memcpy(bufferData, data, size);
 	device.unmapMemory(bufferMemory);

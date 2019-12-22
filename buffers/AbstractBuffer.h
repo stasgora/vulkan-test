@@ -12,7 +12,7 @@ namespace vkr {
 
 		constexpr static const vk::MemoryPropertyFlags STANDARD_PROPERTIES = vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent;
 
-		static void copyBufferData(vk::DeviceMemory &bufferMemory, const void *data, const vk::Device &device, const size_t size);
+		static void copyBufferData(const vk::Device &device, vk::DeviceMemory &bufferMemory, const void *data, const size_t size);
 
 	protected:
 		static void copyBuffer(const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, vk::DeviceSize size, const DeviceManager &deviceManager);
