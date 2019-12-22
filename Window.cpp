@@ -30,7 +30,7 @@ void Window::init() {
 	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
 	vertexBuffer.createDataBuffer(deviceManager);
 	indexBuffer.createDataBuffer(deviceManager);
-	descriptorSetLayout.createDescriptorSetLayout(*deviceManager.device);
+	descriptorSet.createDescriptorSetLayout(*deviceManager.device);
 	sizeDependentWindowSetup();
 	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
 }
@@ -47,10 +47,13 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	swapChain.createSwapChain(deviceManager, surface, size);
 	swapChain.createImageViews(*deviceManager.device);
 	pipeline.createRenderPass(*deviceManager.device, swapChain.swapChainFormat);
-	pipeline.createGraphicsPipeline(*deviceManager.device, swapChain.swapChainExtent, descriptorSetLayout.descriptorSetLayout);
+	pipeline.createGraphicsPipeline(*deviceManager.device, swapChain.swapChainExtent, descriptorSet.descriptorSetLayout);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
 	uniformBuffer.createUniformBuffers(deviceManager, swapChain.swapChainImages.size());
-	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer.buffer, indexBuffer.buffer);
+	descriptorSet.createDescriptorPool(*deviceManager.device, swapChain.swapChainImages.size());
+	descriptorSet.createDescriptorSets(*deviceManager.device, swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers);
+	commandBuffer.createCommandBuffers(*deviceManager.device, swapChain, pipeline,
+			vertexBuffer.buffer, indexBuffer.buffer, descriptorSet.descriptorSets);
 }
 
 void Window::createSurface() {
@@ -103,7 +106,7 @@ void Window::cleanup() {
 	commandBuffer.cleanup(*deviceManager.device);
 	vertexBuffer.cleanup(*deviceManager.device);
 	indexBuffer.cleanup(*deviceManager.device);
-	descriptorSetLayout.cleanup(*deviceManager.device);
+	descriptorSet.cleanupLayout(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);
@@ -116,7 +119,8 @@ void Window::sizeDependentWindowCleanup() {
 	pipeline.cleanup(*deviceManager.device);
 	commandBuffer.clearBuffers(*deviceManager.device);
 	swapChain.cleanup(*deviceManager.device);
-	uniformBuffer.cleanup(*deviceManager.device, swapChain.swapChainImages.size());
+	uniformBuffer.cleanup(*deviceManager.device);
+	descriptorSet.cleanup(*deviceManager.device);
 }
 
 void Window::getRequiredExtensions(std::vector<const char *>& extensions) {

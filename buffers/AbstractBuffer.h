@@ -11,6 +11,9 @@ namespace vkr {
 		                         const vk::MemoryPropertyFlags& properties, vk::Buffer &buffer, vk::DeviceMemory &memory);
 
 		constexpr static const vk::MemoryPropertyFlags STANDARD_PROPERTIES = vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent;
+
+		static void copyBufferData(vk::DeviceMemory &bufferMemory, const void *data, const vk::Device &device, const size_t size);
+
 	protected:
 		static void copyBuffer(const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, vk::DeviceSize size, const DeviceManager &deviceManager);
 		static uint32_t findMemoryType(uint32_t typeFilter, const vk::MemoryPropertyFlags& properties, const vk::PhysicalDeviceMemoryProperties &memoryProperties);

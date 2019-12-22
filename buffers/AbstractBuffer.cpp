@@ -12,7 +12,7 @@ void vkr::AbstractBuffer::createBuffer(const DeviceManager &deviceManager, vk::D
 		throw std::runtime_error("failed to create the buffer!");
 	}
 	vk::MemoryRequirements memRequirements = device.getBufferMemoryRequirements(buffer);
-	uint32_t memType = vkr::Buffer<T>::findMemoryType(memRequirements.memoryTypeBits, properties, deviceManager.memoryProperties);
+	uint32_t memType = findMemoryType(memRequirements.memoryTypeBits, properties, deviceManager.memoryProperties);
 	vk::MemoryAllocateInfo allocInfo(memRequirements.size, memType);
 	try {
 		memory = device.allocateMemory(allocInfo);
@@ -49,4 +49,10 @@ uint32_t vkr::AbstractBuffer::findMemoryType(uint32_t typeFilter, const vk::Memo
 		if ((typeFilter & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
 			return i;
 	throw std::runtime_error("failed to find suitable memory type!");
+}
+
+void vkr::AbstractBuffer::copyBufferData(vk::DeviceMemory &bufferMemory, const void *data, const vk::Device &device, const size_t size) {
+	void* bufferData = device.mapMemory(bufferMemory, 0, size); //TODO use VulkanMemoryAllocator to allocate memory
+	memcpy(bufferData, data, size);
+	device.unmapMemory(bufferMemory);
 }

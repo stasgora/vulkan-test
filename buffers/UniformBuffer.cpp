@@ -2,6 +2,11 @@
 #include "../components/VulkanStructs.h"
 #include "AbstractBuffer.h"
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <chrono>
+
 void vkr::UniformBuffer::createUniformBuffers(const DeviceManager &deviceManager, uint32_t swapImageCount) {
 	vk::DeviceSize bufferSize = sizeof(UniformBufferObject);
 	uniformBuffers.resize(swapImageCount);
@@ -12,12 +17,22 @@ void vkr::UniformBuffer::createUniformBuffers(const DeviceManager &deviceManager
 	}
 }
 
-void vkr::UniformBuffer::updateUniformBuffer(uint32_t imageIndex) {
+void vkr::UniformBuffer::updateUniformBuffer(const vk::Device &device, uint32_t imageIndex, const vk::Extent2D &extent) {
+	static auto startTime = std::chrono::high_resolution_clock::now();
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
+	UniformBufferObject ubo = {};
+	ubo.model = glm::rotate(glm::mat4(1), time * glm::radians(90.0f), glm::vec3(0, 0, 1));
+	ubo.view = glm::lookAt(glm::vec3(2, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+	ubo.proj = glm::perspective(glm::radians(45.0f), extent.width / (float) extent.height, 0.1f, 10.0f);
+	ubo.proj[1][1] *= -1;
+
+	AbstractBuffer::copyBufferData(uniformBufferMemory[imageIndex], &ubo, device, sizeof(ubo));
 }
 
-void vkr::UniformBuffer::cleanup(const vk::Device &device, uint32_t swapImageCount) {
-	for (int i = 0; i < swapImageCount; ++i) {
+void vkr::UniformBuffer::cleanup(const vk::Device &device) {
+	for (int i = 0; i < uniformBuffers.size(); ++i) {
 		device.destroyBuffer(uniformBuffers[i]);
 		device.freeMemory(uniformBufferMemory[i]);
 	}

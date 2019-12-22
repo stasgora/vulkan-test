@@ -19,7 +19,7 @@ void vkr::Renderer::setupRendering(const vk::Device &device, uint32_t swapImageC
 }
 
 bool vkr::Renderer::drawFrame(const DeviceManager &deviceManager, const SwapChain &swapChain,
-                              std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> &buffers, const vkr::UniformBuffer &uniformBuffer) {
+                              std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> &buffers, vkr::UniformBuffer &uniformBuffer) {
 	const vk::Device &device = *deviceManager.device;
 	device.waitForFences(1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -30,7 +30,7 @@ bool vkr::Renderer::drawFrame(const DeviceManager &deviceManager, const SwapChai
 	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 		throw std::runtime_error("failed to acquire swap chain image!");
 	} //TODO what if suboptimal?
-	uniformBuffer.updateUniformBuffer(imageIndex);
+	uniformBuffer.updateUniformBuffer(device, imageIndex, swapChain.swapChainExtent);
 
 	if (imagesInFlight[imageIndex] != nullptr)
 		device.waitForFences(1, imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);

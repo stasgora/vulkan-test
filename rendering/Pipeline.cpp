@@ -56,7 +56,7 @@ void vkr::Pipeline::createGraphicsPipeline(const vk::Device &device, const vk::E
 	vk::PipelineViewportStateCreateInfo viewportState(vk::PipelineViewportStateCreateFlags(), 1, &viewport, 1, &scissors);
 	vk::PipelineRasterizationStateCreateInfo rasterizer;
 	rasterizer.cullMode = vk::CullModeFlagBits::eBack;
-	rasterizer.frontFace = vk::FrontFace::eClockwise;
+	rasterizer.frontFace = vk::FrontFace::eCounterClockwise;
 	rasterizer.lineWidth = 1.0f;
 	vk::PipelineMultisampleStateCreateInfo multisampling;
 	vk::PipelineColorBlendAttachmentState colorBlendAttachment;

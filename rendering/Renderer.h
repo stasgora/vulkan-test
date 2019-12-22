@@ -15,7 +15,7 @@ namespace vkr {
 		void cleanup(const vk::Device &device);
 		bool
 		drawFrame(const DeviceManager &deviceManager, const SwapChain &swapChain, std::vector<vk::CommandBuffer,
-				std::allocator<vk::CommandBuffer>> &buffers, const vkr::UniformBuffer &uniformBuffer);
+				std::allocator<vk::CommandBuffer>> &buffers, vkr::UniformBuffer &uniformBuffer);
 
 		bool frameBufferResized = false;
 	private:

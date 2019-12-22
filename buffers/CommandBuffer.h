@@ -12,7 +12,8 @@ namespace vkr {
 	class CommandBuffer {
 	public:
 		void createMainCommandPool(const vk::Device &device, const QueueFamilyIndices &indices);
-		void createCommandBuffer(const vk::Device &device, const SwapChain &swapChain, const Pipeline &pipeline, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer);
+		void createCommandBuffers(const vk::Device &device, const SwapChain &swapChain, const Pipeline &pipeline, const vk::Buffer &vertexBuffer,
+		                          const vk::Buffer &indexBuffer, const std::vector<vk::DescriptorSet> &descriptorSets);
 		void cleanup(const vk::Device &device);
 		void clearBuffers(const vk::Device &device);
 

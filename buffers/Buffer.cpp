@@ -1,9 +1,8 @@
 #include "Buffer.h"
-#include "CommandBuffer.h"
 #include "AbstractBuffer.h"
 
 
-template<class T> vkr::Buffer<T>::Buffer(const std::vector<T> &data, const vk::BufferUsageFlagBits &usage):data(data), usage(usage) {}
+template<class T> vkr::Buffer<T>::Buffer(const std::vector<T> &data, const vk::BufferUsageFlagBits &usage): data(data), usage(usage) {}
 
 template<class T> void vkr::Buffer<T>::createDataBuffer(const DeviceManager &deviceManager) {
 	vk::Buffer stagingBuffer;
@@ -11,9 +10,7 @@ template<class T> void vkr::Buffer<T>::createDataBuffer(const DeviceManager &dev
 	const vk::Device &device = *deviceManager.device;
 	vk::DeviceSize bufferSize = sizeof(data[0]) * data.size();
 	createBuffer(deviceManager, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, STANDARD_PROPERTIES, stagingBuffer, stagingBufferMemory);
-	void* bufferData = device.mapMemory(stagingBufferMemory, 0, bufferSize); //TODO use VulkanMemoryAllocator to allocate memory
-	memcpy(bufferData, data.data(), (size_t) bufferSize);
-	device.unmapMemory(stagingBufferMemory);
+	copyBufferData(stagingBufferMemory, data.data(), device, bufferSize);
 
 	vk::BufferUsageFlags bufferUsage = vk::BufferUsageFlagBits::eTransferDst | usage;
 	createBuffer(deviceManager, bufferSize, bufferUsage, vk::MemoryPropertyFlagBits::eDeviceLocal, buffer, bufferMemory);

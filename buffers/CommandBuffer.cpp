@@ -2,8 +2,8 @@
 #include "../components/VulkanStructs.h"
 #include "../Window.h"
 
-void vkr::CommandBuffer::createCommandBuffer(const vk::Device &device, const SwapChain &swapChain,
-                                             const Pipeline &pipeline, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer) {
+void vkr::CommandBuffer::createCommandBuffers(const vk::Device &device, const SwapChain &swapChain, const Pipeline &pipeline, const vk::Buffer &vertexBuffer,
+                                              const vk::Buffer &indexBuffer, const std::vector<vk::DescriptorSet> &descriptorSets) {
 	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
 	vk::CommandBufferAllocateInfo allocInfo(commandPool, vk::CommandBufferLevel::ePrimary, commandBuffers.size());
 	try {
@@ -28,7 +28,8 @@ void vkr::CommandBuffer::createCommandBuffer(const vk::Device &device, const Swa
 		vk::DeviceSize offsets[] = {0};
 		commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
 		commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint16);
-
+		commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipeline.pipelineLayout,
+				0, 1, &descriptorSets[i], 0, nullptr);
 		commandBuffers[i].drawIndexed(indices.size(), 1, 0, 0, 0);
 		commandBuffers[i].endRenderPass();
 		try {

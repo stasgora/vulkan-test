@@ -10,8 +10,8 @@ namespace vkr {
 	class UniformBuffer {
 	public:
 		void createUniformBuffers(const DeviceManager &deviceManager, uint32_t swapImageCount);
-		void updateUniformBuffer(uint32_t imageIndex);
-		void cleanup(const vk::Device &device, uint32_t swapImageCount);
+		void updateUniformBuffer(const vk::Device &device, uint32_t imageIndex, const vk::Extent2D &extent);
+		void cleanup(const vk::Device &device);
 
 		std::vector<vk::Buffer> uniformBuffers;
 	private:

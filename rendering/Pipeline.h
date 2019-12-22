@@ -17,11 +17,11 @@ namespace vkr {
 		std::vector<vk::Framebuffer> swapChainFramebuffers;
 		vk::RenderPass renderPass;
 		vk::Pipeline graphicsPipeline;
+		vk::PipelineLayout pipelineLayout;
 	private:
 		static vk::UniqueShaderModule createShaderModule(const std::vector<char> &code, const vk::Device &device);
 		static std::vector<char> readFile(const std::string &fileName);
 
-		vk::PipelineLayout pipelineLayout;
 	};
 }
 

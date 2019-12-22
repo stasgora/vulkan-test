@@ -10,8 +10,8 @@
 #include "rendering/Pipeline.h"
 #include "buffers/CommandBuffer.h"
 #include "rendering/Renderer.h"
-#include "descriptors/DescriptorSetLayout.h"
 #include "buffers/UniformBuffer.h"
+#include "components/DescriptorSet.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -49,7 +49,7 @@ private:
 	vk::UniqueInstance instance;
 	vk::SurfaceKHR surface;
 
-	vkr::DescriptorSetLayout descriptorSetLayout;
+	vkr::DescriptorSet descriptorSet;
 	vkr::Pipeline pipeline;
 	vkr::Renderer renderer;
 
