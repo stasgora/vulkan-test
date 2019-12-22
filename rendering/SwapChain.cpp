@@ -1,6 +1,6 @@
 #include "SwapChain.h"
-#include "DeviceManager.h"
-#include "VulkanStructs.h"
+#include "../components/DeviceManager.h"
+#include "../components/VulkanStructs.h"
 
 void vkr::SwapChain::createSwapChain(const vkr::DeviceManager &deviceManager, const vk::SurfaceKHR &surface, const WindowSize size) {
 	SwapChainSupportDetails swapChainSupport = vkr::DeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);

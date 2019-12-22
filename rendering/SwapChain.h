@@ -2,8 +2,8 @@
 #define TEST_SWAPCHAIN_H
 
 #include <vulkan/vulkan.hpp>
-#include "VulkanStructs.h"
-#include "DeviceManager.h"
+#include "../components/VulkanStructs.h"
+#include "../components/DeviceManager.h"
 
 
 namespace vkr {

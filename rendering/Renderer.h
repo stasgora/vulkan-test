@@ -2,7 +2,7 @@
 #define TEST_RENDERER_H
 
 #include <vulkan/vulkan.hpp>
-#include "../components/SwapChain.h"
+#include "SwapChain.h"
 #include "../components/DeviceManager.h"
 #include "../buffers/UniformBuffer.h"
 

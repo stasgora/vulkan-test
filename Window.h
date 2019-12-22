@@ -6,7 +6,7 @@
 
 #include "components/DebugLayer.h"
 #include "components/DeviceManager.h"
-#include "components/SwapChain.h"
+#include "rendering/SwapChain.h"
 #include "rendering/Pipeline.h"
 #include "buffers/CommandBuffer.h"
 #include "rendering/Renderer.h"

@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.hpp>
 #include "../components/VulkanStructs.h"
-#include "../components/SwapChain.h"
+#include "../rendering/SwapChain.h"
 #include "../rendering/Pipeline.h"
 #include "Buffer.h"
 
