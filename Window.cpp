@@ -49,6 +49,7 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	pipeline.createRenderPass(*deviceManager.device, swapChain.swapChainFormat);
 	pipeline.createGraphicsPipeline(*deviceManager.device, swapChain.swapChainExtent, descriptorSetLayout.descriptorSetLayout);
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
+	uniformBuffer.createUniformBuffers(deviceManager, swapChain.swapChainImages.size());
 	commandBuffer.createCommandBuffer(*deviceManager.device, swapChain, pipeline, vertexBuffer.buffer, indexBuffer.buffer);
 }
 
@@ -88,7 +89,7 @@ void Window::createInstance() {
 void Window::loop() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
-		bool drawn = renderer.drawFrame(*deviceManager.device, swapChain, commandBuffer.commandBuffers, deviceManager);
+		bool drawn = renderer.drawFrame(deviceManager, swapChain, commandBuffer.commandBuffers, uniformBuffer);
 		if (!drawn)
 			sizeDependentWindowSetup(false);
 	}
@@ -115,6 +116,7 @@ void Window::sizeDependentWindowCleanup() {
 	pipeline.cleanup(*deviceManager.device);
 	commandBuffer.clearBuffers(*deviceManager.device);
 	swapChain.cleanup(*deviceManager.device);
+	uniformBuffer.cleanup(*deviceManager.device, swapChain.swapChainImages.size());
 }
 
 void Window::getRequiredExtensions(std::vector<const char *>& extensions) {

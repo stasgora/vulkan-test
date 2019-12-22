@@ -11,6 +11,7 @@
 #include "buffers/CommandBuffer.h"
 #include "rendering/Renderer.h"
 #include "descriptors/DescriptorSetLayout.h"
+#include "buffers/UniformBuffer.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -50,10 +51,12 @@ private:
 
 	vkr::DescriptorSetLayout descriptorSetLayout;
 	vkr::Pipeline pipeline;
+	vkr::Renderer renderer;
+
 	vkr::CommandBuffer commandBuffer;
 	vkr::Buffer<vkr::Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
 	vkr::Buffer<uint16_t> indexBuffer;
-	vkr::Renderer renderer;
+	vkr::UniformBuffer uniformBuffer;
 
 	vkr::DeviceManager deviceManager;
 	vkr::SwapChain swapChain;

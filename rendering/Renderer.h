@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.hpp>
 #include "../components/SwapChain.h"
 #include "../components/DeviceManager.h"
+#include "../buffers/UniformBuffer.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -12,7 +13,9 @@ namespace vkr {
 	public:
 		void setupRendering(const vk::Device &device, uint32_t swapImageCount);
 		void cleanup(const vk::Device &device);
-		bool drawFrame(const vk::Device &device, const SwapChain &swapChain, std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> &buffers, const DeviceManager &deviceManager);
+		bool
+		drawFrame(const DeviceManager &deviceManager, const SwapChain &swapChain, std::vector<vk::CommandBuffer,
+				std::allocator<vk::CommandBuffer>> &buffers, const vkr::UniformBuffer &uniformBuffer);
 
 		bool frameBufferResized = false;
 	private:

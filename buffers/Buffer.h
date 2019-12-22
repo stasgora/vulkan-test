@@ -3,9 +3,10 @@
 
 #include <vulkan/vulkan.hpp>
 #include "../components/DeviceManager.h"
+#include "AbstractBuffer.h"
 
 namespace vkr {
-	template <class T> class Buffer {
+	template <class T> class Buffer : public AbstractBuffer {
 	public:
 		Buffer(const std::vector<T> &data, const vk::BufferUsageFlagBits &usage);
 
@@ -14,11 +15,6 @@ namespace vkr {
 
 		vk::Buffer buffer;
 	protected:
-		static void createBuffer(const DeviceManager &deviceManager, vk::DeviceSize size, const vk::BufferUsageFlags& usage,
-		                         const vk::MemoryPropertyFlags& properties, vk::Buffer &buffer, vk::DeviceMemory &memory);
-		static uint32_t findMemoryType(uint32_t typeFilter, const vk::MemoryPropertyFlags& properties, const vk::PhysicalDeviceMemoryProperties &memoryProperties);
-		static void copyBuffer(const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, vk::DeviceSize size, const DeviceManager &deviceManager);
-
 		vk::DeviceMemory bufferMemory;
 		const std::vector<T> &data;
 		const vk::BufferUsageFlagBits usage;
