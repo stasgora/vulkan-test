@@ -46,6 +46,25 @@ void vkr::TextureImage::createImage(const vkr::DeviceManager &deviceManager, uin
 	device.bindImageMemory(image, imageMemory, 0);
 }
 
+void vkr::TextureImage::copyBufferToImage(const vkr::DeviceManager &deviceManager, const vk::Buffer &buffer, const vk::Image &image, uint32_t width, uint32_t height) {
+	auto commandBuffer = vkr::AbstractBuffer::createSingleUsageCommandBuffer(*deviceManager.device);
+	vk::BufferImageCopy region;
+	region.imageSubresource = {vk::ImageAspectFlagBits::eColor, 0, 1, 0};
+	vk::Extent3D extent(width, height, 1);
+	region.imageExtent = extent;
+	commandBuffer.copyBufferToImage(buffer, image, vk::ImageLayout::eTransferDstOptimal, 1, &region);
+	vkr::AbstractBuffer::endSingleUsageCommandBuffer(deviceManager, commandBuffer);
+}
+
+void vkr::TextureImage::transitionImageLayout(const vkr::DeviceManager &deviceManager, const vk::Image &image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout) {
+	auto commandBuffer = vkr::AbstractBuffer::createSingleUsageCommandBuffer(*deviceManager.device);
+	vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
+	vk::ImageMemoryBarrier barrier(vk::AccessFlags(), vk::AccessFlags(), oldLayout, newLayout, VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED, image, range);
+	commandBuffer.pipelineBarrier(vk::PipelineStageFlags(), vk::PipelineStageFlags(), vk::DependencyFlags(),
+			0, nullptr, 0, nullptr, 1, &barrier);
+	vkr::AbstractBuffer::endSingleUsageCommandBuffer(deviceManager, commandBuffer);
+}
+
 void vkr::TextureImage::cleanup(const vk::Device &device) {
 	device.destroyImage(textureImage);
 	device.freeMemory(textureImageMemory);
