@@ -2,9 +2,15 @@
 #include "../libs/stb_image.h"
 #include "../buffers/AbstractBuffer.h"
 
-void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager) {
+
+void vkr::TextureImage::init(const vkr::DeviceManager &deviceManager, const char *path) {
+	createTextureImage(deviceManager, path);
+	createTextureImageView(*deviceManager.device);
+}
+
+void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager, const char* path) {
 	int texWidth, texHeight, texChannels;
-	stbi_uc* pixels = stbi_load("../assets/texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	vk::DeviceSize imageSize = texWidth * texHeight * 4;
 	if (!pixels)
 		throw std::runtime_error("failed to load texture image!");

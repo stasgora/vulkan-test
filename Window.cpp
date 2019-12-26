@@ -29,8 +29,7 @@ void Window::init() {
 	deviceManager.setupDevice(*instance, surface);
 	vkr::AbstractBuffer::createSingleUsageCommandPool(deviceManager);
 	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
-	textureImage.createTextureImage(deviceManager);
-	textureImage.createTextureImageView(*deviceManager.device);
+	textureImage.init(deviceManager, "../assets/texture.jpg");
 	vertexBuffer.createDataBuffer(deviceManager);
 	indexBuffer.createDataBuffer(deviceManager);
 	descriptorSet.createDescriptorSetLayout(*deviceManager.device);
