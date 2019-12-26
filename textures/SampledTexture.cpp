@@ -1,7 +1,7 @@
 #include "SampledTexture.h"
 
-void vkr::SampledTexture::init(const vkr::DeviceManager &deviceManager, const char *path) {
-	TextureImage::init(deviceManager, path);
+void vkr::SampledTexture::init(const vkr::DeviceManager &deviceManager) {
+	TextureImage::init(deviceManager);
 	createTextureSampler(*deviceManager.device);
 }
 
@@ -22,3 +22,5 @@ void vkr::SampledTexture::cleanup(const vk::Device &device) {
 	TextureImage::cleanup(device);
 	device.destroySampler(textureSampler);
 }
+
+vkr::SampledTexture::SampledTexture(const char *path, vk::ImageLayout layout) : TextureImage(path, layout) {}

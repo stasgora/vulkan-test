@@ -3,12 +3,12 @@
 #include "../buffers/AbstractBuffer.h"
 
 
-void vkr::TextureImage::init(const vkr::DeviceManager &deviceManager, const char *path) {
-	createTextureImage(deviceManager, path);
+void vkr::TextureImage::init(const vkr::DeviceManager &deviceManager) {
+	createTextureImage(deviceManager);
 	createTextureImageView(*deviceManager.device);
 }
 
-void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager, const char* path) {
+void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager) {
 	int texWidth, texHeight, texChannels;
 	stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	vk::DeviceSize imageSize = texWidth * texHeight * 4;
@@ -27,7 +27,7 @@ void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager, c
 			usage, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
 	transitionImageLayout(deviceManager, textureImage, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
 	copyBufferToImage(deviceManager, stagingBuffer, textureImage, texWidth, texHeight);
-	transitionImageLayout(deviceManager, textureImage, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::eShaderReadOnlyOptimal);
+	transitionImageLayout(deviceManager, textureImage, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eTransferDstOptimal, layout);
 
 	device.destroyBuffer(stagingBuffer);
 	device.freeMemory(stagingBufferMemory);
@@ -109,3 +109,5 @@ void vkr::TextureImage::cleanup(const vk::Device &device) {
 	device.destroyImage(textureImage);
 	device.freeMemory(textureImageMemory);
 }
+
+vkr::TextureImage::TextureImage(const char* path, vk::ImageLayout layout): path(path), layout(layout) {}

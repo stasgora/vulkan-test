@@ -3,12 +3,14 @@
 
 
 #include <vulkan/vulkan.hpp>
+#include "../textures/SampledTexture.h"
 
 namespace vkr {
 	class DescriptorSet {
 	public:
 		void createDescriptorPool(const vk::Device &device, uint32_t swapImageCount);
-		void createDescriptorSets(const vk::Device &device, uint32_t swapImageCount, const std::vector<vk::Buffer> &uniformBuffers);
+		void
+		createDescriptorSets(const vk::Device &device, uint32_t swapImageCount, const std::vector<vk::Buffer> &uniformBuffers, const vkr::SampledTexture &texture);
 		void createDescriptorSetLayout(const vk::Device &device);
 		void cleanup(const vk::Device &device);
 		void cleanupLayout(const vk::Device &device);

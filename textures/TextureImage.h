@@ -8,12 +8,18 @@
 namespace vkr {
 	class TextureImage {
 	public:
-		virtual void init(const DeviceManager &deviceManager, const char* path);
+		TextureImage(const char* path, vk::ImageLayout layout);
+
+		virtual void init(const DeviceManager &deviceManager);
 		virtual void cleanup(const vk::Device &device);
 
 		static vk::ImageView createImageView(const vk::Device &device, const vk::Image &image, vk::Format format);
+
+		vk::ImageView textureImageView;
+		vk::ImageLayout layout;
+		const char* path;
 	private:
-		void createTextureImage(const DeviceManager &deviceManager, const char* path);
+		void createTextureImage(const DeviceManager &deviceManager);
 		void createTextureImageView(const vk::Device &device);
 
 		static void createImage(const DeviceManager &deviceManager, uint32_t width, uint32_t height, vk::Format format, vk::ImageTiling tiling,
@@ -23,8 +29,6 @@ namespace vkr {
 
 		vk::Image textureImage;
 		vk::DeviceMemory textureImageMemory;
-		vk::ImageView textureImageView;
-
 	};
 }
 

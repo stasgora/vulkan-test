@@ -4,7 +4,8 @@
 Window::Window()
 : size({WIDTH, HEIGHT}),
 vertexBuffer(vertices, vk::BufferUsageFlagBits::eVertexBuffer),
-indexBuffer(indices, vk::BufferUsageFlagBits::eIndexBuffer) {}
+indexBuffer(indices, vk::BufferUsageFlagBits::eIndexBuffer),
+textureImage("../assets/texture.jpg", vk::ImageLayout::eShaderReadOnlyOptimal) {}
 
 Window::~Window() {
 	cleanup();
@@ -29,7 +30,7 @@ void Window::init() {
 	deviceManager.setupDevice(*instance, surface);
 	vkr::AbstractBuffer::createSingleUsageCommandPool(deviceManager);
 	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
-	textureImage.init(deviceManager, "../assets/texture.jpg");
+	textureImage.init(deviceManager);
 	vertexBuffer.createDataBuffer(deviceManager);
 	indexBuffer.createDataBuffer(deviceManager);
 	descriptorSet.createDescriptorSetLayout(*deviceManager.device);
@@ -53,7 +54,7 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
 	uniformBuffer.createUniformBuffers(deviceManager, swapChain.swapChainImages.size());
 	descriptorSet.createDescriptorPool(*deviceManager.device, swapChain.swapChainImages.size());
-	descriptorSet.createDescriptorSets(*deviceManager.device, swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers);
+	descriptorSet.createDescriptorSets(*deviceManager.device, swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers, textureImage);
 	commandBuffer.createCommandBuffers(*deviceManager.device, swapChain, pipeline,
 			vertexBuffer.buffer, indexBuffer.buffer, descriptorSet.descriptorSets);
 }

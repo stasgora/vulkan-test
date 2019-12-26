@@ -19,6 +19,7 @@ void vkr::DeviceManager::createLogicalDevice(const vk::SurfaceKHR &surface) {
 	}
 
 	auto deviceFeatures = vk::PhysicalDeviceFeatures();
+	deviceFeatures.samplerAnisotropy = VK_TRUE;
 	vk::DeviceCreateInfo createInfo(vk::DeviceCreateFlags(), static_cast<uint32_t>(queueCreateInfos.size()), queueCreateInfos.data());
 	createInfo.pEnabledFeatures = &deviceFeatures;
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
@@ -60,7 +61,8 @@ bool vkr::DeviceManager::isDeviceSuitable(const vk::PhysicalDevice &device, cons
 		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device, surface);
 		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 	}
-	return indices.isComplete() && extensionsSupported && swapChainAdequate;
+	auto features = device.getFeatures();
+	return indices.isComplete() && extensionsSupported && swapChainAdequate && features.samplerAnisotropy;
 }
 
 vkr::SwapChainSupportDetails vkr::DeviceManager::querySwapChainSupport(const vk::PhysicalDevice &device, const vk::SurfaceKHR &surface) {

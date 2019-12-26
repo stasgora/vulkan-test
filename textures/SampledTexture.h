@@ -7,13 +7,14 @@
 namespace vkr {
 	class SampledTexture: public TextureImage {
 	public:
-		void init(const DeviceManager &deviceManager, const char *path) override;
+		SampledTexture(const char *path, vk::ImageLayout layout);
+
+		void init(const DeviceManager &deviceManager) override;
 		void cleanup(const vk::Device &device) override;
 
+		vk::Sampler textureSampler;
 	private:
 		void createTextureSampler(const vk::Device &device);
-
-		vk::Sampler textureSampler;
 	};
 }
 
