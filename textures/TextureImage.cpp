@@ -19,6 +19,9 @@ void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager) {
 	vk::ImageUsageFlags usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled; // TODO check eR8G8B8A8Unorm support
 	createImage(deviceManager, texWidth, texHeight, vk::Format::eR8G8B8A8Unorm, vk::ImageTiling::eOptimal,
 			usage, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
+	transitionImageLayout(deviceManager, textureImage, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
+	copyBufferToImage(deviceManager, stagingBuffer, textureImage, texWidth, texHeight);
+	transitionImageLayout(deviceManager, textureImage, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::eShaderReadOnlyOptimal);
 
 	device.destroyBuffer(stagingBuffer);
 	device.freeMemory(stagingBufferMemory);
@@ -49,7 +52,7 @@ void vkr::TextureImage::createImage(const vkr::DeviceManager &deviceManager, uin
 void vkr::TextureImage::copyBufferToImage(const vkr::DeviceManager &deviceManager, const vk::Buffer &buffer, const vk::Image &image, uint32_t width, uint32_t height) {
 	auto commandBuffer = vkr::AbstractBuffer::createSingleUsageCommandBuffer(*deviceManager.device);
 	vk::BufferImageCopy region;
-	region.imageSubresource = {vk::ImageAspectFlagBits::eColor, 0, 1, 0};
+	region.imageSubresource = {vk::ImageAspectFlagBits::eColor, 0, 0, 1};
 	vk::Extent3D extent(width, height, 1);
 	region.imageExtent = extent;
 	commandBuffer.copyBufferToImage(buffer, image, vk::ImageLayout::eTransferDstOptimal, 1, &region);
@@ -57,11 +60,27 @@ void vkr::TextureImage::copyBufferToImage(const vkr::DeviceManager &deviceManage
 }
 
 void vkr::TextureImage::transitionImageLayout(const vkr::DeviceManager &deviceManager, const vk::Image &image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout) {
+	vk::PipelineStageFlags sourceStage;
+	vk::PipelineStageFlags destStage;
 	auto commandBuffer = vkr::AbstractBuffer::createSingleUsageCommandBuffer(*deviceManager.device);
 	vk::ImageSubresourceRange range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
 	vk::ImageMemoryBarrier barrier(vk::AccessFlags(), vk::AccessFlags(), oldLayout, newLayout, VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED, image, range);
-	commandBuffer.pipelineBarrier(vk::PipelineStageFlags(), vk::PipelineStageFlags(), vk::DependencyFlags(),
-			0, nullptr, 0, nullptr, 1, &barrier);
+
+	if (oldLayout == vk::ImageLayout::eUndefined && newLayout == vk::ImageLayout::eTransferDstOptimal) {
+		barrier.srcAccessMask = vk::AccessFlags();
+		barrier.dstAccessMask = vk::AccessFlagBits::eTransferWrite;
+		sourceStage = vk::PipelineStageFlagBits::eTopOfPipe;
+		destStage = vk::PipelineStageFlagBits::eTransfer;
+	} else if (oldLayout == vk::ImageLayout::eTransferDstOptimal && newLayout == vk::ImageLayout::eShaderReadOnlyOptimal) {
+		barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+		barrier.dstAccessMask = vk::AccessFlagBits::eShaderRead;
+		sourceStage = vk::PipelineStageFlagBits::eTransfer;
+		destStage = vk::PipelineStageFlagBits::eFragmentShader;
+	} else
+		throw std::invalid_argument("unsupported layout transition!");
+
+	commandBuffer.pipelineBarrier(sourceStage, destStage, vk::DependencyFlags(), 0,
+			nullptr,0, nullptr, 1, &barrier);
 	vkr::AbstractBuffer::endSingleUsageCommandBuffer(deviceManager, commandBuffer);
 }
 
