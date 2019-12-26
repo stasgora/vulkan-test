@@ -1,8 +1,9 @@
 #include "UniformBuffer.h"
 #include "../components/VulkanStructs.h"
-#include "AbstractBuffer.h"
+#include "BufferUtils.h"
 
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <chrono>
@@ -12,8 +13,8 @@ void vkr::UniformBuffer::createUniformBuffers(const DeviceManager &deviceManager
 	uniformBuffers.resize(swapImageCount);
 	uniformBufferMemory.resize(swapImageCount);
 	for (int i = 0; i < swapImageCount; ++i) {
-		AbstractBuffer::createBuffer(deviceManager, bufferSize, vk::BufferUsageFlagBits::eUniformBuffer,
-				AbstractBuffer::STANDARD_PROPERTIES, uniformBuffers[i], uniformBufferMemory[i]);
+		BufferUtils::createBuffer(deviceManager, bufferSize, vk::BufferUsageFlagBits::eUniformBuffer,
+		                          BufferUtils::STANDARD_PROPERTIES, uniformBuffers[i], uniformBufferMemory[i]);
 	}
 }
 
@@ -28,7 +29,7 @@ void vkr::UniformBuffer::updateUniformBuffer(const vk::Device &device, uint32_t 
 	ubo.proj = glm::perspective(glm::radians(45.0f), extent.width / (float) extent.height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
 
-	AbstractBuffer::copyBufferData(device, uniformBufferMemory[imageIndex], &ubo, sizeof(ubo));
+	BufferUtils::copyBufferData(device, uniformBufferMemory[imageIndex], &ubo, sizeof(ubo));
 }
 
 void vkr::UniformBuffer::cleanup(const vk::Device &device) {

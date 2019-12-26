@@ -28,7 +28,7 @@ void Window::init() {
 	debugLayer.init(*instance);
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
-	vkr::AbstractBuffer::createSingleUsageCommandPool(deviceManager);
+	vkr::BufferUtils::createSingleUsageCommandPool(deviceManager);
 	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
 	textureImage.init(deviceManager);
 	vertexBuffer.createDataBuffer(deviceManager);
@@ -111,7 +111,7 @@ void Window::cleanup() {
 	indexBuffer.cleanup(*deviceManager.device);
 	descriptorSet.cleanupLayout(*deviceManager.device);
 	textureImage.cleanup(*deviceManager.device);
-	vkr::AbstractBuffer::cleanupSingleUsageCommandPool(*deviceManager.device);
+	vkr::BufferUtils::cleanupSingleUsageCommandPool(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);

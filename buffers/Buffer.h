@@ -3,10 +3,10 @@
 
 #include <vulkan/vulkan.hpp>
 #include "../components/DeviceManager.h"
-#include "AbstractBuffer.h"
+#include "BufferUtils.h"
 
 namespace vkr {
-	template <class T> class Buffer : public AbstractBuffer {
+	template <class T> class Buffer {
 	public:
 		Buffer(const std::vector<T> &data, const vk::BufferUsageFlagBits &usage);
 

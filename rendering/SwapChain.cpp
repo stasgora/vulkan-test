@@ -2,6 +2,7 @@
 #include "../components/DeviceManager.h"
 #include "../components/VulkanStructs.h"
 #include "../textures/TextureImage.h"
+#include "../textures/ImageUtils.h"
 
 void vkr::SwapChain::createSwapChain(const vkr::DeviceManager &deviceManager, const vk::SurfaceKHR &surface, const WindowSize size) {
 	SwapChainSupportDetails swapChainSupport = vkr::DeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
@@ -44,7 +45,7 @@ vk::SwapchainCreateInfoKHR vkr::SwapChain::createSwapChainInfo(const SwapChainSu
 void vkr::SwapChain::createImageViews(const vk::Device &device) {
 	swapChainImageViews.reserve(swapChainImages.size());
 	for (int i = 0; i < swapChainImages.size(); ++i)
-		swapChainImageViews.push_back(vkr::TextureImage::createImageView(device, swapChainImages[i], swapChainFormat));
+		swapChainImageViews.push_back(ImageUtils::createImageView(device, swapChainImages[i], swapChainFormat));
 }
 
 vk::SurfaceFormatKHR vkr::SwapChain::chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> &availableFormats) {

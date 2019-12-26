@@ -1,10 +1,10 @@
-#include "AbstractBuffer.h"
+#include "BufferUtils.h"
 #include "CommandBuffer.h"
 
-vk::CommandPool vkr::AbstractBuffer::singleUsageCommandPool = nullptr;
+vk::CommandPool vkr::BufferUtils::singleUsageCommandPool = nullptr;
 
-void vkr::AbstractBuffer::createBuffer(const DeviceManager &deviceManager, vk::DeviceSize size, const vk::BufferUsageFlags& usage,
-                                                            const vk::MemoryPropertyFlags& properties, vk::Buffer &buffer, vk::DeviceMemory &memory) {
+void vkr::BufferUtils::createBuffer(const DeviceManager &deviceManager, vk::DeviceSize size, const vk::BufferUsageFlags& usage,
+                                    const vk::MemoryPropertyFlags& properties, vk::Buffer &buffer, vk::DeviceMemory &memory) {
 	const vk::Device &device = *deviceManager.device;
 	vk::BufferCreateInfo bufferInfo(vk::BufferCreateFlags(), size, usage, vk::SharingMode::eExclusive);
 	try {
@@ -23,11 +23,11 @@ void vkr::AbstractBuffer::createBuffer(const DeviceManager &deviceManager, vk::D
 	device.bindBufferMemory(buffer, memory, 0);
 }
 
-void vkr::AbstractBuffer::createSingleUsageCommandPool(const vkr::DeviceManager &deviceManager) {
+void vkr::BufferUtils::createSingleUsageCommandPool(const vkr::DeviceManager &deviceManager) {
 	vkr::CommandBuffer::createCommandPool(singleUsageCommandPool, vk::CommandPoolCreateFlagBits::eTransient, *deviceManager.device, deviceManager.queueFamilyIndices);
 }
 
-void vkr::AbstractBuffer::copyBuffer(const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, vk::DeviceSize size, const DeviceManager &deviceManager) {
+void vkr::BufferUtils::copyBuffer(const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, vk::DeviceSize size, const DeviceManager &deviceManager) {
 	const vk::Device &device = *deviceManager.device;
 	vk::CommandBuffer commandBuffer = createSingleUsageCommandBuffer(device);
 	vk::BufferCopy copyRegion(0, 0, size);
@@ -35,7 +35,7 @@ void vkr::AbstractBuffer::copyBuffer(const vk::Buffer &srcBuffer, const vk::Buff
 	endSingleUsageCommandBuffer(deviceManager, commandBuffer);
 }
 
-vk::CommandBuffer vkr::AbstractBuffer::createSingleUsageCommandBuffer(const vk::Device &device) {
+vk::CommandBuffer vkr::BufferUtils::createSingleUsageCommandBuffer(const vk::Device &device) {
 	vk::CommandBufferAllocateInfo allocInfo(singleUsageCommandPool, vk::CommandBufferLevel::ePrimary, 1);
 	vk::CommandBuffer commandBuffer = device.allocateCommandBuffers(allocInfo)[0];
 	vk::CommandBufferBeginInfo beginInfo(vk::CommandBufferUsageFlagBits::eOneTimeSubmit);
@@ -43,7 +43,7 @@ vk::CommandBuffer vkr::AbstractBuffer::createSingleUsageCommandBuffer(const vk::
 	return commandBuffer;
 }
 
-void vkr::AbstractBuffer::endSingleUsageCommandBuffer(const vkr::DeviceManager &deviceManager, vk::CommandBuffer &commandBuffer) {
+void vkr::BufferUtils::endSingleUsageCommandBuffer(const vkr::DeviceManager &deviceManager, vk::CommandBuffer &commandBuffer) {
 	commandBuffer.end();
 	vk::SubmitInfo submitInfo;
 	submitInfo.commandBufferCount = 1;
@@ -54,19 +54,19 @@ void vkr::AbstractBuffer::endSingleUsageCommandBuffer(const vkr::DeviceManager &
 	deviceManager.device->freeCommandBuffers(singleUsageCommandPool, 1, &commandBuffer);
 }
 
-uint32_t vkr::AbstractBuffer::findMemoryType(uint32_t typeFilter, const vk::MemoryPropertyFlags& properties, const vk::PhysicalDeviceMemoryProperties &memoryProperties) {
+uint32_t vkr::BufferUtils::findMemoryType(uint32_t typeFilter, const vk::MemoryPropertyFlags& properties, const vk::PhysicalDeviceMemoryProperties &memoryProperties) {
 	for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
 		if ((typeFilter & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
 			return i;
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void vkr::AbstractBuffer::copyBufferData(const vk::Device &device, vk::DeviceMemory &bufferMemory, const void *data, const size_t size) {
+void vkr::BufferUtils::copyBufferData(const vk::Device &device, vk::DeviceMemory &bufferMemory, const void *data, const size_t size) {
 	void* bufferData = device.mapMemory(bufferMemory, 0, size); //TODO use VulkanMemoryAllocator to allocate memory
 	memcpy(bufferData, data, size);
 	device.unmapMemory(bufferMemory);
 }
 
-void vkr::AbstractBuffer::cleanupSingleUsageCommandPool(const vk::Device &device) {
+void vkr::BufferUtils::cleanupSingleUsageCommandPool(const vk::Device &device) {
 	device.destroyCommandPool(singleUsageCommandPool);
 }
