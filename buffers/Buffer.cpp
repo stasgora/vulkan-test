@@ -2,12 +2,9 @@
 #include "BufferUtils.h"
 
 
-template<class T> vkr::Buffer<T>::Buffer(const std::vector<T> &data, const vk::BufferUsageFlagBits &usage): data(data), usage(usage) {}
-
-template<class T> void vkr::Buffer<T>::createDataBuffer(const DeviceManager &deviceManager) {
+template<class T> void vkr::Buffer<T>::createDataBuffer() {
 	vk::Buffer stagingBuffer;
 	vk::DeviceMemory stagingBufferMemory;
-	const vk::Device &device = *deviceManager.device;
 	vk::DeviceSize bufferSize = sizeof(data[0]) * data.size();
 	BufferUtils::createBuffer(deviceManager, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, BufferUtils::STANDARD_PROPERTIES, stagingBuffer, stagingBufferMemory);
 	BufferUtils::copyBufferData(device, stagingBufferMemory, data.data(), bufferSize);
@@ -20,7 +17,10 @@ template<class T> void vkr::Buffer<T>::createDataBuffer(const DeviceManager &dev
 	device.freeMemory(stagingBufferMemory);
 }
 
-template<class T> void vkr::Buffer<T>::cleanup(const vk::Device &device) {
+template<class T> void vkr::Buffer<T>::cleanup() {
 	device.destroyBuffer(buffer);
 	device.freeMemory(bufferMemory);
 }
+
+template<class T> vkr::Buffer<T>::Buffer(const vkr::DeviceManager &deviceManager, const std::vector<T> &data, const vk::BufferUsageFlagBits &usage):
+RendererComponent(deviceManager), data(data), usage(usage) {}

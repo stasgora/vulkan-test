@@ -1,11 +1,11 @@
 #include "SampledTexture.h"
 
-void vkr::SampledTexture::init(const vkr::DeviceManager &deviceManager) {
-	TextureImage::init(deviceManager);
-	createTextureSampler(*deviceManager.device);
+void vkr::SampledTexture::init() {
+	TextureImage::init();
+	createTextureSampler();
 }
 
-void vkr::SampledTexture::createTextureSampler(const vk::Device &device) {
+void vkr::SampledTexture::createTextureSampler() {
 	vk::SamplerCreateInfo samplerInfo(vk::SamplerCreateFlags(), vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear);
 	samplerInfo.anisotropyEnable = VK_TRUE;
 	samplerInfo.maxAnisotropy = 16;
@@ -18,9 +18,10 @@ void vkr::SampledTexture::createTextureSampler(const vk::Device &device) {
 	}
 }
 
-void vkr::SampledTexture::cleanup(const vk::Device &device) {
-	TextureImage::cleanup(device);
+void vkr::SampledTexture::cleanup() {
+	TextureImage::cleanup();
 	device.destroySampler(textureSampler);
 }
 
-vkr::SampledTexture::SampledTexture(const char *path, vk::ImageLayout layout) : TextureImage(path, layout) {}
+vkr::SampledTexture::SampledTexture(const vkr::DeviceManager &deviceManager, const char *path, vk::ImageLayout layout) :
+TextureImage(deviceManager, path, layout) {}

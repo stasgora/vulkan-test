@@ -4,14 +4,17 @@
 #include <vulkan/vulkan.hpp>
 #include "../components/VulkanStructs.h"
 #include "../components/DeviceManager.h"
+#include "../components/RendererComponent.h"
 
 
 namespace vkr {
-	class SwapChain {
+	class SwapChain : public RendererComponent {
 	public:
-		void createSwapChain(const DeviceManager &deviceManager, const vk::SurfaceKHR &surface, const WindowSize size);
-		void createImageViews(const vk::Device &device);
-		void cleanup(const vk::Device &device);
+		SwapChain(const DeviceManager &deviceManager);
+
+		void createSwapChain(const vk::SurfaceKHR &surface, const WindowSize size);
+		void createImageViews();
+		void cleanup() override;
 
 		vk::SwapchainKHR swapChain;
 		vk::Extent2D swapChainExtent;

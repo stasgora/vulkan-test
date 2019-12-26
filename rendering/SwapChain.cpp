@@ -4,7 +4,7 @@
 #include "../textures/TextureImage.h"
 #include "../textures/ImageUtils.h"
 
-void vkr::SwapChain::createSwapChain(const vkr::DeviceManager &deviceManager, const vk::SurfaceKHR &surface, const WindowSize size) {
+void vkr::SwapChain::createSwapChain(const vk::SurfaceKHR &surface, const WindowSize size) {
 	SwapChainSupportDetails swapChainSupport = vkr::DeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
 	swapChainExtent = chooseSwapExtent(swapChainSupport.capabilities, size);
 	vk::SwapchainCreateInfoKHR createInfo = createSwapChainInfo(swapChainSupport, deviceManager.queueFamilyIndices, surface);
@@ -42,7 +42,7 @@ vk::SwapchainCreateInfoKHR vkr::SwapChain::createSwapChainInfo(const SwapChainSu
 	return createInfo;
 }
 
-void vkr::SwapChain::createImageViews(const vk::Device &device) {
+void vkr::SwapChain::createImageViews() {
 	swapChainImageViews.reserve(swapChainImages.size());
 	for (int i = 0; i < swapChainImages.size(); ++i)
 		swapChainImageViews.push_back(ImageUtils::createImageView(device, swapChainImages[i], swapChainFormat));
@@ -72,10 +72,12 @@ vk::Extent2D vkr::SwapChain::chooseSwapExtent(const vk::SurfaceCapabilitiesKHR &
 	return actualExtent;
 }
 
-void vkr::SwapChain::cleanup(const vk::Device &device) {
+void vkr::SwapChain::cleanup() {
 	for (const auto &imageView : swapChainImageViews)
 		device.destroyImageView(imageView);
 	swapChainImageViews.clear();
 	swapChainImages.clear();
 	device.destroySwapchainKHR(swapChain);
 }
+
+vkr::SwapChain::SwapChain(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

@@ -1,1 +1,0 @@
-#include "StencilImage.h"

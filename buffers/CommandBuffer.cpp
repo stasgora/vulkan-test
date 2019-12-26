@@ -2,7 +2,7 @@
 #include "../components/VulkanStructs.h"
 #include "../Window.h"
 
-void vkr::CommandBuffer::createCommandBuffers(const vk::Device &device, const SwapChain &swapChain, const Pipeline &pipeline, const vk::Buffer &vertexBuffer,
+void vkr::CommandBuffer::createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const vk::Buffer &vertexBuffer,
                                               const vk::Buffer &indexBuffer, const std::vector<vk::DescriptorSet> &descriptorSets) {
 	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
 	vk::CommandBufferAllocateInfo allocInfo(commandPool, vk::CommandBufferLevel::ePrimary, commandBuffers.size());
@@ -40,15 +40,15 @@ void vkr::CommandBuffer::createCommandBuffers(const vk::Device &device, const Sw
 	}
 }
 
-void vkr::CommandBuffer::createMainCommandPool(const vk::Device &device, const QueueFamilyIndices &indices) {
-	createCommandPool(commandPool, vk::CommandPoolCreateFlags(), device, indices);
+void vkr::CommandBuffer::createMainCommandPool() {
+	createCommandPool(commandPool, vk::CommandPoolCreateFlags(), device, deviceManager.queueFamilyIndices);
 }
 
-void vkr::CommandBuffer::cleanup(const vk::Device &device) {
+void vkr::CommandBuffer::cleanup() {
 	device.destroyCommandPool(commandPool);
 }
 
-void vkr::CommandBuffer::clearBuffers(const vk::Device &device) {
+void vkr::CommandBuffer::clearBuffers() {
 	device.freeCommandBuffers(commandPool, commandBuffers);
 	commandBuffers.clear();
 }
@@ -61,3 +61,5 @@ void vkr::CommandBuffer::createCommandPool(vk::CommandPool &commandPool, const v
 		throw std::runtime_error("failed to create command pool!");
 	}
 }
+
+vkr::CommandBuffer::CommandBuffer(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

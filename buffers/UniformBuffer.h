@@ -5,13 +5,16 @@
 #include <vector>
 #include <vulkan/vulkan.hpp>
 #include "../components/DeviceManager.h"
+#include "../components/RendererComponent.h"
 
 namespace vkr {
-	class UniformBuffer {
+	class UniformBuffer : public RendererComponent {
 	public:
-		void createUniformBuffers(const DeviceManager &deviceManager, uint32_t swapImageCount);
-		void updateUniformBuffer(const vk::Device &device, uint32_t imageIndex, const vk::Extent2D &extent);
-		void cleanup(const vk::Device &device);
+		UniformBuffer(const DeviceManager &deviceManager);
+
+		void createUniformBuffers(uint32_t swapImageCount);
+		void updateUniformBuffer(uint32_t imageIndex, const vk::Extent2D &extent);
+		void cleanup() override;
 
 		std::vector<vk::Buffer> uniformBuffers;
 	private:

@@ -4,21 +4,22 @@
 
 #include <vulkan/vulkan.hpp>
 #include "../components/DeviceManager.h"
+#include "../components/RendererComponent.h"
 
 namespace vkr {
-	class TextureImage {
+	class TextureImage : public RendererComponent {
 	public:
-		TextureImage(const char* path, vk::ImageLayout layout);
+		TextureImage(const vkr::DeviceManager &deviceManager, const char* path, vk::ImageLayout layout);
 
-		virtual void init(const DeviceManager &deviceManager);
-		virtual void cleanup(const vk::Device &device);
+		void init() override;
+		void cleanup() override;
 
 		vk::ImageView textureImageView;
 		vk::ImageLayout layout;
 		const char* path;
 	private:
-		void createTextureImage(const DeviceManager &deviceManager);
-		void createTextureImageView(const vk::Device &device);
+		void createTextureImage();
+		void createTextureImageView();
 
 		vk::Image textureImage;
 		vk::DeviceMemory textureImageMemory;

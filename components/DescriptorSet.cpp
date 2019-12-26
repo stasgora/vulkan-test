@@ -2,7 +2,7 @@
 #include "VulkanStructs.h"
 #include "../textures/SampledTexture.h"
 
-void vkr::DescriptorSet::createDescriptorPool(const vk::Device &device, uint32_t swapImageCount) {
+void vkr::DescriptorSet::createDescriptorPool(uint32_t swapImageCount) {
 	std::array<vk::DescriptorPoolSize, 2> poolSizes = {};
 	poolSizes[0] = {vk::DescriptorType::eUniformBuffer, swapImageCount};
 	poolSizes[1] = {vk::DescriptorType::eCombinedImageSampler, swapImageCount};
@@ -14,7 +14,7 @@ void vkr::DescriptorSet::createDescriptorPool(const vk::Device &device, uint32_t
 	}
 }
 
-void vkr::DescriptorSet::createDescriptorSets(const vk::Device &device, uint32_t swapImageCount,
+void vkr::DescriptorSet::createDescriptorSets(uint32_t swapImageCount,
 		const std::vector<vk::Buffer> &uniformBuffers, const vkr::SampledTexture & texture) {
 	std::vector<vk::DescriptorSetLayout> layouts(swapImageCount, descriptorSetLayout);
 	vk::DescriptorSetAllocateInfo allocInfo(descriptorPool, swapImageCount, layouts.data());
@@ -35,7 +35,7 @@ void vkr::DescriptorSet::createDescriptorSets(const vk::Device &device, uint32_t
 	}
 }
 
-void vkr::DescriptorSet::createDescriptorSetLayout(const vk::Device &device) {
+void vkr::DescriptorSet::createDescriptorSetLayout() {
 	vk::DescriptorSetLayoutBinding uboLayoutBinding(0, vk::DescriptorType::eUniformBuffer,
 	                                                1, vk::ShaderStageFlagBits::eVertex, nullptr);
 	vk::DescriptorSetLayoutBinding samplerLayoutBinding(1, vk::DescriptorType::eCombinedImageSampler,
@@ -50,10 +50,12 @@ void vkr::DescriptorSet::createDescriptorSetLayout(const vk::Device &device) {
 
 }
 
-void vkr::DescriptorSet::cleanup(const vk::Device &device) {
+void vkr::DescriptorSet::cleanup() {
 	device.destroyDescriptorPool(descriptorPool);
 }
 
-void vkr::DescriptorSet::cleanupLayout(const vk::Device &device) {
+void vkr::DescriptorSet::cleanupLayout() {
 	device.destroyDescriptorSetLayout(descriptorSetLayout);
 }
+
+vkr::DescriptorSet::DescriptorSet(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

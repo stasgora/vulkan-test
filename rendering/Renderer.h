@@ -9,12 +9,14 @@
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 namespace vkr {
-	class Renderer {
+	class Renderer : public RendererComponent {
 	public:
-		void setupRendering(const vk::Device &device, uint32_t swapImageCount);
-		void cleanup(const vk::Device &device);
+		Renderer(const DeviceManager &deviceManager);
+
+		void setupRendering(uint32_t swapImageCount);
+		void cleanup() override;
 		bool
-		drawFrame(const DeviceManager &deviceManager, const SwapChain &swapChain, std::vector<vk::CommandBuffer,
+		drawFrame(const SwapChain &swapChain, std::vector<vk::CommandBuffer,
 				std::allocator<vk::CommandBuffer>> &buffers, vkr::UniformBuffer &uniformBuffer);
 
 		bool frameBufferResized = false;

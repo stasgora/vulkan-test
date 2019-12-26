@@ -3,9 +3,16 @@
 
 Window::Window()
 : size({WIDTH, HEIGHT}),
-vertexBuffer(vertices, vk::BufferUsageFlagBits::eVertexBuffer),
-indexBuffer(indices, vk::BufferUsageFlagBits::eIndexBuffer),
-textureImage("../assets/texture.jpg", vk::ImageLayout::eShaderReadOnlyOptimal) {}
+  vertexBuffer(deviceManager,vertices, vk::BufferUsageFlagBits::eVertexBuffer),
+  indexBuffer(deviceManager,indices, vk::BufferUsageFlagBits::eIndexBuffer),
+  textureImage(deviceManager, "../assets/texture.jpg", vk::ImageLayout::eShaderReadOnlyOptimal),
+  depthImage(deviceManager),
+  swapChain(deviceManager),
+  pipeline(deviceManager),
+  descriptorSet(deviceManager),
+  uniformBuffer(deviceManager),
+  commandBuffer(deviceManager),
+  renderer(deviceManager) {}
 
 Window::~Window() {
 	cleanup();
@@ -29,13 +36,14 @@ void Window::init() {
 	createSurface();
 	deviceManager.setupDevice(*instance, surface);
 	vkr::BufferUtils::createSingleUsageCommandPool(deviceManager);
-	commandBuffer.createMainCommandPool(*deviceManager.device, deviceManager.queueFamilyIndices);
-	textureImage.init(deviceManager);
-	vertexBuffer.createDataBuffer(deviceManager);
-	indexBuffer.createDataBuffer(deviceManager);
-	descriptorSet.createDescriptorSetLayout(*deviceManager.device);
+	commandBuffer.createMainCommandPool();
+	depthImage.createDepthResources();
+	textureImage.init();
+	vertexBuffer.createDataBuffer();
+	indexBuffer.createDataBuffer();
+	descriptorSet.createDescriptorSetLayout();
 	sizeDependentWindowSetup();
-	renderer.setupRendering(*deviceManager.device, swapChain.swapChainImages.size());
+	renderer.setupRendering(swapChain.swapChainImages.size());
 }
 
 void Window::sizeDependentWindowSetup(bool firstTime) {
@@ -47,15 +55,15 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 		deviceManager.device->waitIdle(); //TODO pass old swap chain to the new instead of waiting here
 		sizeDependentWindowCleanup();
 	}
-	swapChain.createSwapChain(deviceManager, surface, size);
-	swapChain.createImageViews(*deviceManager.device);
-	pipeline.createRenderPass(*deviceManager.device, swapChain.swapChainFormat);
-	pipeline.createGraphicsPipeline(*deviceManager.device, swapChain.swapChainExtent, descriptorSet.descriptorSetLayout);
-	pipeline.createFrameBuffers(*deviceManager.device, swapChain.swapChainExtent, swapChain.swapChainImageViews);
-	uniformBuffer.createUniformBuffers(deviceManager, swapChain.swapChainImages.size());
-	descriptorSet.createDescriptorPool(*deviceManager.device, swapChain.swapChainImages.size());
-	descriptorSet.createDescriptorSets(*deviceManager.device, swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers, textureImage);
-	commandBuffer.createCommandBuffers(*deviceManager.device, swapChain, pipeline,
+	swapChain.createSwapChain(surface, size);
+	swapChain.createImageViews();
+	pipeline.createRenderPass(swapChain.swapChainFormat);
+	pipeline.createGraphicsPipeline(swapChain.swapChainExtent, descriptorSet.descriptorSetLayout);
+	pipeline.createFrameBuffers(swapChain.swapChainExtent, swapChain.swapChainImageViews);
+	uniformBuffer.createUniformBuffers(swapChain.swapChainImages.size());
+	descriptorSet.createDescriptorPool(swapChain.swapChainImages.size());
+	descriptorSet.createDescriptorSets(swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers, textureImage);
+	commandBuffer.createCommandBuffers(swapChain, pipeline,
 			vertexBuffer.buffer, indexBuffer.buffer, descriptorSet.descriptorSets);
 }
 
@@ -95,7 +103,7 @@ void Window::createInstance() {
 void Window::loop() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
-		bool drawn = renderer.drawFrame(deviceManager, swapChain, commandBuffer.commandBuffers, uniformBuffer);
+		bool drawn = renderer.drawFrame(swapChain, commandBuffer.commandBuffers, uniformBuffer);
 		if (!drawn)
 			sizeDependentWindowSetup(false);
 	}
@@ -105,12 +113,12 @@ void Window::loop() {
 void Window::cleanup() {
 	sizeDependentWindowCleanup();
 
-	renderer.cleanup(*deviceManager.device);
-	commandBuffer.cleanup(*deviceManager.device);
-	vertexBuffer.cleanup(*deviceManager.device);
-	indexBuffer.cleanup(*deviceManager.device);
-	descriptorSet.cleanupLayout(*deviceManager.device);
-	textureImage.cleanup(*deviceManager.device);
+	renderer.cleanup();
+	commandBuffer.cleanup();
+	vertexBuffer.cleanup();
+	indexBuffer.cleanup();
+	descriptorSet.cleanupLayout();
+	textureImage.cleanup();
 	vkr::BufferUtils::cleanupSingleUsageCommandPool(*deviceManager.device);
 	instance->destroySurfaceKHR(surface);
 	debugLayer.cleanup(*instance);
@@ -121,11 +129,11 @@ void Window::cleanup() {
 void Window::sizeDependentWindowCleanup() {
 	deviceManager.device->waitIdle();
 
-	pipeline.cleanup(*deviceManager.device);
-	commandBuffer.clearBuffers(*deviceManager.device);
-	swapChain.cleanup(*deviceManager.device);
-	uniformBuffer.cleanup(*deviceManager.device);
-	descriptorSet.cleanup(*deviceManager.device);
+	pipeline.cleanup();
+	commandBuffer.clearBuffers();
+	swapChain.cleanup();
+	uniformBuffer.cleanup();
+	descriptorSet.cleanup();
 }
 
 void Window::getRequiredExtensions(std::vector<const char *>& extensions) {

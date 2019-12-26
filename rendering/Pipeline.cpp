@@ -2,7 +2,7 @@
 #include "../components/VulkanStructs.h"
 #include <fstream>
 
-void vkr::Pipeline::createFrameBuffers(const vk::Device &device, const vk::Extent2D &extent, const std::vector<vk::ImageView> &imageViews) {
+void vkr::Pipeline::createFrameBuffers(const vk::Extent2D &extent, const std::vector<vk::ImageView> &imageViews) {
 	swapChainFramebuffers.resize(imageViews.size());
 	for (int i = 0; i < imageViews.size(); ++i) {
 		vk::ImageView attachments[] = {imageViews[i]};
@@ -15,7 +15,7 @@ void vkr::Pipeline::createFrameBuffers(const vk::Device &device, const vk::Exten
 	}
 }
 
-void vkr::Pipeline::createRenderPass(const vk::Device &device, const vk::Format &format) {
+void vkr::Pipeline::createRenderPass(const vk::Format &format) {
 	vk::AttachmentDescription colorAttachment;
 	colorAttachment.format = format;
 	colorAttachment.loadOp = vk::AttachmentLoadOp::eClear;
@@ -37,7 +37,7 @@ void vkr::Pipeline::createRenderPass(const vk::Device &device, const vk::Format 
 	}
 }
 
-void vkr::Pipeline::createGraphicsPipeline(const vk::Device &device, const vk::Extent2D &extent, const vk::DescriptorSetLayout &descriptorSetLayout) {
+void vkr::Pipeline::createGraphicsPipeline(const vk::Extent2D &extent, const vk::DescriptorSetLayout &descriptorSetLayout) {
 	auto vertexShaderModule = createShaderModule(readFile("../shaders/vert.spv"), device);
 	auto fragmentShaderModule = createShaderModule(readFile("../shaders/frag.spv"), device);
 
@@ -103,7 +103,7 @@ vk::UniqueShaderModule vkr::Pipeline::createShaderModule(const std::vector<char>
 	}
 }
 
-void vkr::Pipeline::cleanup(const vk::Device &device) {
+void vkr::Pipeline::cleanup() {
 	for (const auto &buffer : swapChainFramebuffers)
 		device.destroyFramebuffer(buffer);
 	swapChainFramebuffers.clear();
@@ -111,3 +111,5 @@ void vkr::Pipeline::cleanup(const vk::Device &device) {
 	device.destroyPipelineLayout(pipelineLayout);
 	device.destroyRenderPass(renderPass);
 }
+
+vkr::Pipeline::Pipeline(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

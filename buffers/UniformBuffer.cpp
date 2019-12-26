@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <chrono>
 
-void vkr::UniformBuffer::createUniformBuffers(const DeviceManager &deviceManager, uint32_t swapImageCount) {
+void vkr::UniformBuffer::createUniformBuffers(uint32_t swapImageCount) {
 	vk::DeviceSize bufferSize = sizeof(UniformBufferObject);
 	uniformBuffers.resize(swapImageCount);
 	uniformBufferMemory.resize(swapImageCount);
@@ -18,7 +18,7 @@ void vkr::UniformBuffer::createUniformBuffers(const DeviceManager &deviceManager
 	}
 }
 
-void vkr::UniformBuffer::updateUniformBuffer(const vk::Device &device, uint32_t imageIndex, const vk::Extent2D &extent) {
+void vkr::UniformBuffer::updateUniformBuffer(uint32_t imageIndex, const vk::Extent2D &extent) {
 	static auto startTime = std::chrono::high_resolution_clock::now();
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
@@ -32,9 +32,11 @@ void vkr::UniformBuffer::updateUniformBuffer(const vk::Device &device, uint32_t 
 	BufferUtils::copyBufferData(device, uniformBufferMemory[imageIndex], &ubo, sizeof(ubo));
 }
 
-void vkr::UniformBuffer::cleanup(const vk::Device &device) {
+void vkr::UniformBuffer::cleanup() {
 	for (int i = 0; i < uniformBuffers.size(); ++i) {
 		device.destroyBuffer(uniformBuffers[i]);
 		device.freeMemory(uniformBufferMemory[i]);
 	}
 }
+
+vkr::UniformBuffer::UniformBuffer(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

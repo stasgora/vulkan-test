@@ -4,14 +4,15 @@
 #include <vulkan/vulkan.hpp>
 #include "../components/DeviceManager.h"
 #include "BufferUtils.h"
+#include "../components/RendererComponent.h"
 
 namespace vkr {
-	template <class T> class Buffer {
+	template <class T> class Buffer : public RendererComponent {
 	public:
-		Buffer(const std::vector<T> &data, const vk::BufferUsageFlagBits &usage);
+		Buffer(const DeviceManager &deviceManager, const std::vector<T> &data, const vk::BufferUsageFlagBits &usage);
 
-		void createDataBuffer(const DeviceManager &deviceManager);
-		void cleanup(const vk::Device &device);
+		void createDataBuffer();
+		void cleanup() override;
 
 		vk::Buffer buffer;
 	protected:

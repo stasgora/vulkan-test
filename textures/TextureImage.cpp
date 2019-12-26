@@ -4,12 +4,12 @@
 #include "ImageUtils.h"
 
 
-void vkr::TextureImage::init(const vkr::DeviceManager &deviceManager) {
-	createTextureImage(deviceManager);
-	createTextureImageView(*deviceManager.device);
+void vkr::TextureImage::init() {
+	createTextureImage();
+	createTextureImageView();
 }
 
-void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager) {
+void vkr::TextureImage::createTextureImage() {
 	int texWidth, texHeight, texChannels;
 	stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	vk::DeviceSize imageSize = texWidth * texHeight * 4;
@@ -18,7 +18,6 @@ void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager) {
 
 	vk::Buffer stagingBuffer;
 	vk::DeviceMemory stagingBufferMemory;
-	const vk::Device &device = *deviceManager.device;
 	BufferUtils::createBuffer(deviceManager, imageSize, vk::BufferUsageFlagBits::eTransferSrc, BufferUtils::STANDARD_PROPERTIES, stagingBuffer, stagingBufferMemory);
 	BufferUtils::copyBufferData(device, stagingBufferMemory, pixels, imageSize);
 	stbi_image_free(pixels);
@@ -34,14 +33,15 @@ void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager) {
 	device.freeMemory(stagingBufferMemory);
 }
 
-void vkr::TextureImage::createTextureImageView(const vk::Device &device) {
+void vkr::TextureImage::createTextureImageView() {
 	textureImageView = ImageUtils::createImageView(device, textureImage, vk::Format::eR8G8B8A8Unorm);
 }
 
-void vkr::TextureImage::cleanup(const vk::Device &device) {
+void vkr::TextureImage::cleanup() {
 	device.destroyImageView(textureImageView);
 	device.destroyImage(textureImage);
 	device.freeMemory(textureImageMemory);
 }
 
-vkr::TextureImage::TextureImage(const char* path, vk::ImageLayout layout): path(path), layout(layout) {}
+vkr::TextureImage::TextureImage(const vkr::DeviceManager &deviceManager, const char* path, vk::ImageLayout layout):
+RendererComponent(deviceManager), path(path), layout(layout) {}

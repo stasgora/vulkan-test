@@ -5,14 +5,17 @@
 
 #include <vector>
 #include <string>
+#include "../components/RendererComponent.h"
 
 namespace vkr {
-	class Pipeline {
+	class Pipeline : public RendererComponent {
 	public:
-		void createRenderPass(const vk::Device &device, const vk::Format &format);
-		void createGraphicsPipeline(const vk::Device &device, const vk::Extent2D &extent, const vk::DescriptorSetLayout &layout);
-		void createFrameBuffers(const vk::Device &device, const vk::Extent2D &extent, const std::vector<vk::ImageView> &imageViews);
-		void cleanup(const vk::Device &device);
+		Pipeline(const DeviceManager &deviceManager);
+
+		void createRenderPass(const vk::Format &format);
+		void createGraphicsPipeline(const vk::Extent2D &extent, const vk::DescriptorSetLayout &layout);
+		void createFrameBuffers(const vk::Extent2D &extent, const std::vector<vk::ImageView> &imageViews);
+		void cleanup() override;
 
 		std::vector<vk::Framebuffer> swapChainFramebuffers;
 		vk::RenderPass renderPass;

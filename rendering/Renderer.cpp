@@ -2,7 +2,7 @@
 #include "../components/DeviceManager.h"
 #include "../buffers/UniformBuffer.h"
 
-void vkr::Renderer::setupRendering(const vk::Device &device, uint32_t swapImageCount) {
+void vkr::Renderer::setupRendering(uint32_t swapImageCount) {
 	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -18,9 +18,8 @@ void vkr::Renderer::setupRendering(const vk::Device &device, uint32_t swapImageC
 	}
 }
 
-bool vkr::Renderer::drawFrame(const DeviceManager &deviceManager, const SwapChain &swapChain,
+bool vkr::Renderer::drawFrame(const SwapChain &swapChain,
                               std::vector<vk::CommandBuffer, std::allocator<vk::CommandBuffer>> &buffers, vkr::UniformBuffer &uniformBuffer) {
-	const vk::Device &device = *deviceManager.device;
 	device.waitForFences(1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
@@ -30,7 +29,7 @@ bool vkr::Renderer::drawFrame(const DeviceManager &deviceManager, const SwapChai
 	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 		throw std::runtime_error("failed to acquire swap chain image!");
 	} //TODO what if suboptimal?
-	uniformBuffer.updateUniformBuffer(device, imageIndex, swapChain.swapChainExtent);
+	uniformBuffer.updateUniformBuffer(imageIndex, swapChain.swapChainExtent);
 
 	if (imagesInFlight[imageIndex] != nullptr)
 		device.waitForFences(1, imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
@@ -65,10 +64,12 @@ bool vkr::Renderer::drawFrame(const DeviceManager &deviceManager, const SwapChai
 	return true;
 }
 
-void vkr::Renderer::cleanup(const vk::Device &device) {
+void vkr::Renderer::cleanup() {
 	for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
 		device.destroySemaphore(imageAvailableSemaphores[i]);
 		device.destroySemaphore(renderFinishedSemaphores[i]);
 		device.destroyFence(inFlightFences[i]);
 	}
 }
+
+vkr::Renderer::Renderer(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

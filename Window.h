@@ -13,6 +13,7 @@
 #include "buffers/UniformBuffer.h"
 #include "components/DescriptorSet.h"
 #include "textures/SampledTexture.h"
+#include "textures/DepthImage.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -54,10 +55,11 @@ private:
 	void cleanup();
 
 	vkr::WindowSize size;
-	GLFWwindow* window;
+	GLFWwindow* window{};
 	vk::UniqueInstance instance;
 	vk::SurfaceKHR surface;
 	vkr::SampledTexture textureImage;
+	vkr::DepthImage depthImage;
 
 	vkr::DescriptorSet descriptorSet;
 	vkr::Pipeline pipeline;
@@ -70,7 +72,7 @@ private:
 
 	vkr::DeviceManager deviceManager;
 	vkr::SwapChain swapChain;
-	vkr::DebugLayer debugLayer;
+	vkr::DebugLayer debugLayer{};
 };
 
 
