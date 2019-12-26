@@ -27,6 +27,20 @@ void vkr::TextureImage::createTextureImage(const DeviceManager &deviceManager) {
 	device.freeMemory(stagingBufferMemory);
 }
 
+void vkr::TextureImage::createTextureImageView(const vk::Device &device) {
+	textureImageView = createImageView(device, textureImage, vk::Format::eR8G8B8A8Unorm);
+}
+
+vk::ImageView vkr::TextureImage::createImageView(const vk::Device &device, const vk::Image &image, vk::Format format) {
+	vk::ImageViewCreateInfo viewInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format);
+	viewInfo.subresourceRange = {vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1};
+	try {
+		return device.createImageView(viewInfo);
+	} catch (vk::SystemError &err) {
+		throw std::runtime_error("failed to create texture image view!");
+	}
+}
+
 void vkr::TextureImage::createImage(const vkr::DeviceManager &deviceManager, uint32_t width, uint32_t height, vk::Format format, vk::ImageTiling tiling,
                                     vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image &image, vk::DeviceMemory &imageMemory) {
 	vk::Extent3D imageExtent(static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1);
@@ -85,6 +99,7 @@ void vkr::TextureImage::transitionImageLayout(const vkr::DeviceManager &deviceMa
 }
 
 void vkr::TextureImage::cleanup(const vk::Device &device) {
+	device.destroyImageView(textureImageView);
 	device.destroyImage(textureImage);
 	device.freeMemory(textureImageMemory);
 }

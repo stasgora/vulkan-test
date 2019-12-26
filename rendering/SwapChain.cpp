@@ -1,6 +1,7 @@
 #include "SwapChain.h"
 #include "../components/DeviceManager.h"
 #include "../components/VulkanStructs.h"
+#include "../textures/TextureImage.h"
 
 void vkr::SwapChain::createSwapChain(const vkr::DeviceManager &deviceManager, const vk::SurfaceKHR &surface, const WindowSize size) {
 	SwapChainSupportDetails swapChainSupport = vkr::DeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);
@@ -42,17 +43,8 @@ vk::SwapchainCreateInfoKHR vkr::SwapChain::createSwapChainInfo(const SwapChainSu
 
 void vkr::SwapChain::createImageViews(const vk::Device &device) {
 	swapChainImageViews.reserve(swapChainImages.size());
-	for (int i = 0; i < swapChainImages.size(); ++i) {
-		vk::ImageViewCreateInfo createInfo(vk::ImageViewCreateFlags(), swapChainImages[i], vk::ImageViewType::e2D, swapChainFormat);
-		createInfo.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
-		createInfo.subresourceRange.levelCount = 1;
-		createInfo.subresourceRange.layerCount = 1;
-		try {
-			swapChainImageViews.push_back(device.createImageView(createInfo));
-		} catch (vk::SystemError &err) {
-			throw std::runtime_error("failed to create image views!");
-		}
-	}
+	for (int i = 0; i < swapChainImages.size(); ++i)
+		swapChainImageViews.push_back(vkr::TextureImage::createImageView(device, swapChainImages[i], swapChainFormat));
 }
 
 vk::SurfaceFormatKHR vkr::SwapChain::chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> &availableFormats) {
