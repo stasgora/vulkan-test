@@ -31,7 +31,7 @@ void vkr::CommandBuffer::createCommandBuffers(const SwapChain &swapChain, const 
 		vk::Buffer vertexBuffers[] = {vertexBuffer};
 		vk::DeviceSize offsets[] = {0};
 		commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
-		commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint16);
+		commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint32);
 		commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipeline.pipelineLayout,
 				0, 1, &descriptorSets[i], 0, nullptr);
 		commandBuffers[i].drawIndexed(indices.size(), 1, 0, 0, 0);

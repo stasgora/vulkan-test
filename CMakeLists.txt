@@ -15,5 +15,6 @@ add_executable(test main.cpp Window.cpp Window.h components/DebugLayer.cpp compo
         components/DescriptorSet.cpp components/DescriptorSet.h libs/stb_image.h libs/stb_image.cpp
         textures/TextureImage.cpp textures/TextureImage.h textures/SampledTexture.cpp textures/SampledTexture.h
         textures/DepthImage.cpp textures/DepthImage.h textures/ImageUtils.cpp textures/ImageUtils.h
-        components/RendererComponent.h components/RendererComponent.cpp textures/BaseImage.cpp textures/BaseImage.h)
+        components/RendererComponent.h components/RendererComponent.cpp textures/BaseImage.cpp textures/BaseImage.h
+        libs/tiny_obj_loader.h libs/tiny_obj_loader.cpp)
 target_link_libraries(test Vulkan::Vulkan glfw glm)

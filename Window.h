@@ -29,7 +29,7 @@ const std::vector<vkr::Vertex> vertices = {
 		{{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
 		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
 };
-const std::vector<uint16_t> indices = {
+const std::vector<uint32_t> indices = {
 		0, 1, 2, 2, 3, 0,
 		4, 5, 6, 6, 7, 4
 };
@@ -67,7 +67,7 @@ private:
 
 	vkr::CommandBuffer commandBuffer;
 	vkr::Buffer<vkr::Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
-	vkr::Buffer<uint16_t> indexBuffer;
+	vkr::Buffer<uint32_t> indexBuffer;
 	vkr::UniformBuffer uniformBuffer;
 
 	vkr::DeviceManager deviceManager;

@@ -23,6 +23,6 @@ namespace vkr {
 }
 
 template class vkr::Buffer<vkr::Vertex>;
-template class vkr::Buffer<uint16_t>;
+template class vkr::Buffer<uint32_t>;
 
 #endif //TEST_BUFFER_H
