@@ -10,12 +10,12 @@
 namespace vkr {
 	class TextureImage : public BaseImage {
 	public:
-		TextureImage(const vkr::DeviceManager &deviceManager, const char* path, vk::ImageLayout layout);
+		TextureImage(const vkr::DeviceManager &deviceManager, std::string path, vk::ImageLayout layout);
 
 		void init() override;
 
 		vk::ImageLayout layout;
-		const char* path;
+		std::string path;
 	private:
 		void createTextureImage();
 		void createTextureImageView();

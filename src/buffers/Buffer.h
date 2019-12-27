@@ -12,6 +12,7 @@ namespace vkr {
 		Buffer(const DeviceManager &deviceManager, const std::vector<T> &data, const vk::BufferUsageFlagBits &usage);
 
 		void createDataBuffer();
+		size_t getDataSize() const;
 		void cleanup() override;
 
 		vk::Buffer buffer;

@@ -3,8 +3,8 @@
 
 Window::Window()
 : size({WIDTH, HEIGHT}),
-  vertexBuffer(deviceManager,vertices, vk::BufferUsageFlagBits::eVertexBuffer),
-  indexBuffer(deviceManager,indices, vk::BufferUsageFlagBits::eIndexBuffer),
+  vertexBuffer(deviceManager, objModel.vertices, vk::BufferUsageFlagBits::eVertexBuffer),
+  indexBuffer(deviceManager, objModel.indices, vk::BufferUsageFlagBits::eIndexBuffer),
   textureImage(deviceManager, "../assets/chalet.jpg", vk::ImageLayout::eShaderReadOnlyOptimal),
   depthImage(deviceManager),
   swapChain(deviceManager),
@@ -12,7 +12,8 @@ Window::Window()
   descriptorSet(deviceManager),
   uniformBuffer(deviceManager),
   commandBuffer(deviceManager),
-  renderer(deviceManager) {}
+  renderer(deviceManager),
+  objModel("../assets/chalet.obj") {}
 
 Window::~Window() {
 	cleanup();
@@ -38,6 +39,7 @@ void Window::init() {
 	vkr::BufferUtils::createSingleUsageCommandPool(deviceManager);
 	commandBuffer.createMainCommandPool();
 	textureImage.init();
+	objModel.loadModel();
 	vertexBuffer.createDataBuffer();
 	indexBuffer.createDataBuffer();
 	descriptorSet.createDescriptorSetLayout();
@@ -63,8 +65,7 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	uniformBuffer.createUniformBuffers(swapChain.swapChainImages.size());
 	descriptorSet.createDescriptorPool(swapChain.swapChainImages.size());
 	descriptorSet.createDescriptorSets(swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers, textureImage);
-	commandBuffer.createCommandBuffers(swapChain, pipeline,
-			vertexBuffer.buffer, indexBuffer.buffer, descriptorSet.descriptorSets);
+	commandBuffer.createCommandBuffers(swapChain, pipeline, vertexBuffer, indexBuffer, descriptorSet.descriptorSets);
 }
 
 void Window::createSurface() {

@@ -14,8 +14,8 @@ namespace vkr {
 		explicit CommandBuffer(const DeviceManager &deviceManager);
 
 		void createMainCommandPool();
-		void createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const vk::Buffer &vertexBuffer,
-		                          const vk::Buffer &indexBuffer, const std::vector<vk::DescriptorSet> &descriptorSets);
+		void createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const Buffer<Vertex> &vertexBuffer,
+		                          const Buffer<uint32_t> &indexBuffer, const std::vector<vk::DescriptorSet> &descriptorSets);
 		void cleanup() override;
 		void clearBuffers();
 

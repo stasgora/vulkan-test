@@ -24,3 +24,8 @@ template<class T> void vkr::Buffer<T>::cleanup() {
 
 template<class T> vkr::Buffer<T>::Buffer(const vkr::DeviceManager &deviceManager, const std::vector<T> &data, const vk::BufferUsageFlagBits &usage):
 RendererComponent(deviceManager), data(data), usage(usage) {}
+
+template<class T>
+size_t vkr::Buffer<T>::getDataSize() const {
+	return data.size();
+}
