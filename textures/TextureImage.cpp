@@ -2,6 +2,7 @@
 #include "../libs/stb_image.h"
 #include "../buffers/BufferUtils.h"
 #include "ImageUtils.h"
+#include "BaseImage.h"
 
 
 void vkr::TextureImage::init() {
@@ -24,24 +25,18 @@ void vkr::TextureImage::createTextureImage() {
 
 	vk::ImageUsageFlags usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled; // TODO check eR8G8B8A8Unorm support
 	ImageUtils::createImage(deviceManager, texWidth, texHeight, vk::Format::eR8G8B8A8Unorm, vk::ImageTiling::eOptimal,
-	                        usage, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
-	ImageUtils::transitionImageLayout(deviceManager, textureImage, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
-	ImageUtils::copyBufferToImage(deviceManager, stagingBuffer, textureImage, texWidth, texHeight);
-	ImageUtils::transitionImageLayout(deviceManager, textureImage, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eTransferDstOptimal, layout);
+	                        usage, vk::MemoryPropertyFlagBits::eDeviceLocal, image, imageMemory);
+	ImageUtils::transitionImageLayout(deviceManager, image, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
+	ImageUtils::copyBufferToImage(deviceManager, stagingBuffer, image, texWidth, texHeight);
+	ImageUtils::transitionImageLayout(deviceManager, image, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eTransferDstOptimal, layout);
 
 	device.destroyBuffer(stagingBuffer);
 	device.freeMemory(stagingBufferMemory);
 }
 
 void vkr::TextureImage::createTextureImageView() {
-	textureImageView = ImageUtils::createImageView(device, textureImage, vk::Format::eR8G8B8A8Unorm);
-}
-
-void vkr::TextureImage::cleanup() {
-	device.destroyImageView(textureImageView);
-	device.destroyImage(textureImage);
-	device.freeMemory(textureImageMemory);
+	imageView = ImageUtils::createImageView(device, image, vk::Format::eR8G8B8A8Unorm, vk::ImageAspectFlagBits::eColor);
 }
 
 vkr::TextureImage::TextureImage(const vkr::DeviceManager &deviceManager, const char* path, vk::ImageLayout layout):
-RendererComponent(deviceManager), path(path), layout(layout) {}
+BaseImage(deviceManager), path(path), layout(layout) {}

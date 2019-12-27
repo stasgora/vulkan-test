@@ -8,7 +8,7 @@
 namespace vkr {
 	class ImageUtils {
 	public:
-		static vk::ImageView createImageView(const vk::Device &device, const vk::Image &image, vk::Format format);
+		static vk::ImageView createImageView(const vk::Device &device, const vk::Image &image, vk::Format format, vk::ImageAspectFlags aspectFlags);
 
 		static void copyBufferToImage(const DeviceManager &deviceManager, const vk::Buffer &buffer, const vk::Image &image, uint32_t width, uint32_t height);
 

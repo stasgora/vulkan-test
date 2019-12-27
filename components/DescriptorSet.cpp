@@ -25,7 +25,7 @@ void vkr::DescriptorSet::createDescriptorSets(uint32_t swapImageCount,
 	}
 	for (int i = 0; i < swapImageCount; ++i) {
 		vk::DescriptorBufferInfo bufferInfo(uniformBuffers[i], 0, sizeof(UniformBufferObject));
-		vk::DescriptorImageInfo imageInfo(texture.textureSampler, texture.textureImageView, texture.layout);
+		vk::DescriptorImageInfo imageInfo(texture.textureSampler, texture.imageView, texture.layout);
 		std::array<vk::WriteDescriptorSet, 2> descriptorWrites = {};
 		descriptorWrites[0] = {descriptorSets[i], 0, 0, 1, vk::DescriptorType::eUniformBuffer};
 		descriptorWrites[1] = {descriptorSets[i], 1, 0, 1, vk::DescriptorType::eCombinedImageSampler};

@@ -37,7 +37,6 @@ void Window::init() {
 	deviceManager.setupDevice(*instance, surface);
 	vkr::BufferUtils::createSingleUsageCommandPool(deviceManager);
 	commandBuffer.createMainCommandPool();
-	depthImage.createDepthResources();
 	textureImage.init();
 	vertexBuffer.createDataBuffer();
 	indexBuffer.createDataBuffer();
@@ -59,7 +58,8 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	swapChain.createImageViews();
 	pipeline.createRenderPass(swapChain.swapChainFormat);
 	pipeline.createGraphicsPipeline(swapChain.swapChainExtent, descriptorSet.descriptorSetLayout);
-	pipeline.createFrameBuffers(swapChain.swapChainExtent, swapChain.swapChainImageViews);
+	depthImage.createDepthResources(swapChain.swapChainExtent);
+	pipeline.createFrameBuffers(swapChain, depthImage);
 	uniformBuffer.createUniformBuffers(swapChain.swapChainImages.size());
 	descriptorSet.createDescriptorPool(swapChain.swapChainImages.size());
 	descriptorSet.createDescriptorSets(swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers, textureImage);
@@ -129,6 +129,7 @@ void Window::cleanup() {
 void Window::sizeDependentWindowCleanup() {
 	deviceManager.device->waitIdle();
 
+	depthImage.cleanup();
 	pipeline.cleanup();
 	commandBuffer.clearBuffers();
 	swapChain.cleanup();

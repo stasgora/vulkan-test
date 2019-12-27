@@ -7,7 +7,7 @@
 namespace vkr {
 	class RendererComponent {
 	public:
-		RendererComponent(const DeviceManager &deviceManager);
+		explicit RendererComponent(const DeviceManager &deviceManager);
 		virtual void init();
 		virtual void cleanup();
 

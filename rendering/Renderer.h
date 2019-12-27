@@ -11,7 +11,7 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
 namespace vkr {
 	class Renderer : public RendererComponent {
 	public:
-		Renderer(const DeviceManager &deviceManager);
+		explicit Renderer(const DeviceManager &deviceManager);
 
 		void setupRendering(uint32_t swapImageCount);
 		void cleanup() override;

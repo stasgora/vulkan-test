@@ -6,18 +6,16 @@
 #include "../components/RendererComponent.h"
 
 namespace vkr {
-	class DepthImage : public RendererComponent {
+	class DepthImage : public BaseImage {
 	public:
-		DepthImage(const DeviceManager &deviceManager);
+		explicit DepthImage(const DeviceManager &deviceManager);
 
-		void createDepthResources();
+		void createDepthResources(const vk::Extent2D &extent);
 
+		static vk::Format findDepthFormat(const DeviceManager &deviceManager);
 	private:
-		vk::Format findSupportedFormat(const std::vector<vk::Format> &candidates, vk::ImageTiling tiling, vk::FormatFeatureFlags features);
-
-		vk::Image depthImage;
-		vk::ImageView depthImageView;
-		vk::DeviceMemory depthImageMemory;
+		static vk::Format findSupportedFormat(const DeviceManager &deviceManager, const std::vector<vk::Format> &candidates, vk::ImageTiling tiling, const vk::FormatFeatureFlags& features);
+		inline bool hasStencilComponent(vk::Format format);
 	};
 }
 

@@ -6,15 +6,17 @@
 #include <vector>
 #include <string>
 #include "../components/RendererComponent.h"
+#include "../textures/DepthImage.h"
+#include "SwapChain.h"
 
 namespace vkr {
 	class Pipeline : public RendererComponent {
 	public:
-		Pipeline(const DeviceManager &deviceManager);
+		explicit Pipeline(const DeviceManager &deviceManager);
 
 		void createRenderPass(const vk::Format &format);
 		void createGraphicsPipeline(const vk::Extent2D &extent, const vk::DescriptorSetLayout &layout);
-		void createFrameBuffers(const vk::Extent2D &extent, const std::vector<vk::ImageView> &imageViews);
+		void createFrameBuffers(const SwapChain &swapChain, const DepthImage &depthImage);
 		void cleanup() override;
 
 		std::vector<vk::Framebuffer> swapChainFramebuffers;

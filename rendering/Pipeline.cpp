@@ -2,11 +2,12 @@
 #include "../components/VulkanStructs.h"
 #include <fstream>
 
-void vkr::Pipeline::createFrameBuffers(const vk::Extent2D &extent, const std::vector<vk::ImageView> &imageViews) {
-	swapChainFramebuffers.resize(imageViews.size());
-	for (int i = 0; i < imageViews.size(); ++i) {
-		vk::ImageView attachments[] = {imageViews[i]};
-		vk::FramebufferCreateInfo framebufferInfo(vk::FramebufferCreateFlags(), renderPass, 1, attachments, extent.width, extent.height, 1);
+void vkr::Pipeline::createFrameBuffers(const SwapChain &swapChain, const DepthImage &depthImage) {
+	swapChainFramebuffers.resize(swapChain.swapChainImageViews.size());
+	for (int i = 0; i < swapChain.swapChainImageViews.size(); ++i) {
+		std::array<vk::ImageView, 2> attachments = {swapChain.swapChainImageViews[i], depthImage.imageView};
+		vk::FramebufferCreateInfo framebufferInfo(vk::FramebufferCreateFlags(), renderPass,
+				attachments.size(), attachments.data(), swapChain.swapChainExtent.width, swapChain.swapChainExtent.height, 1);
 		try {
 			swapChainFramebuffers[i] = device.createFramebuffer(framebufferInfo);
 		} catch (vk::SystemError &err) {
@@ -23,13 +24,21 @@ void vkr::Pipeline::createRenderPass(const vk::Format &format) {
 	colorAttachment.stencilStoreOp = vk::AttachmentStoreOp::eDontCare;
 	colorAttachment.finalLayout = vk::ImageLayout::ePresentSrcKHR;
 	vk::AttachmentReference colorAttachmentRef(0, vk::ImageLayout::eColorAttachmentOptimal);
+
+	vk::AttachmentDescription depthAttachment(vk::AttachmentDescriptionFlags(), DepthImage::findDepthFormat(deviceManager), vk::SampleCountFlagBits::e1,
+			vk::AttachmentLoadOp::eClear, vk::AttachmentStoreOp::eDontCare, vk::AttachmentLoadOp::eDontCare,
+			vk::AttachmentStoreOp::eDontCare, vk::ImageLayout::eUndefined, vk::ImageLayout::eDepthStencilAttachmentOptimal);
+	vk::AttachmentReference depthAttachmentRef(1, vk::ImageLayout::eDepthStencilAttachmentOptimal);
+
 	vk::SubpassDescription subpass;
 	subpass.pipelineBindPoint = vk::PipelineBindPoint::eGraphics;
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &colorAttachmentRef;
+	subpass.pDepthStencilAttachment = &depthAttachmentRef;
 	vk::SubpassDependency dependency(VK_SUBPASS_EXTERNAL, 0, vk::PipelineStageFlagBits::eColorAttachmentOutput, vk::PipelineStageFlagBits::eColorAttachmentOutput,
 	                                 vk::AccessFlags(), vk::AccessFlagBits::eColorAttachmentRead | vk::AccessFlagBits::eColorAttachmentWrite);
-	vk::RenderPassCreateInfo renderPassInfo(vk::RenderPassCreateFlags(), 1, &colorAttachment, 1, &subpass, 1, &dependency);
+	std::array<vk::AttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
+	vk::RenderPassCreateInfo renderPassInfo(vk::RenderPassCreateFlags(), attachments.size(), attachments.data(), 1, &subpass, 1, &dependency);
 	try {
 		renderPass = device.createRenderPass(renderPassInfo);
 	} catch (vk::SystemError &err) {
@@ -72,8 +81,10 @@ void vkr::Pipeline::createGraphicsPipeline(const vk::Extent2D &extent, const vk:
 	} catch (vk::SystemError &err) {
 		throw std::runtime_error("failed to create pipeline layout!");
 	}
+	vk::PipelineDepthStencilStateCreateInfo depthStencil(vk::PipelineDepthStencilStateCreateFlags(), VK_TRUE, VK_TRUE, vk::CompareOp::eLess);
+	depthStencil.maxDepthBounds = 1;
 	vk::GraphicsPipelineCreateInfo pipelineInfo(vk::PipelineCreateFlags(), 2, shaderStages, &vertexInputInfo, &inputAssembly,
-			nullptr, &viewportState, &rasterizer, &multisampling, nullptr, &colorBlending,
+			nullptr, &viewportState, &rasterizer, &multisampling, &depthStencil, &colorBlending,
 			nullptr, pipelineLayout, renderPass, 0, nullptr, -1);
 	try {
 		graphicsPipeline = device.createGraphicsPipeline(nullptr, pipelineInfo);

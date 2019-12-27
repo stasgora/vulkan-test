@@ -10,7 +10,7 @@
 namespace vkr {
 	class SwapChain : public RendererComponent {
 	public:
-		SwapChain(const DeviceManager &deviceManager);
+		explicit SwapChain(const DeviceManager &deviceManager);
 
 		void createSwapChain(const vk::SurfaceKHR &surface, const WindowSize size);
 		void createImageViews();

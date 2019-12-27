@@ -11,7 +11,7 @@
 namespace vkr {
 	class CommandBuffer : public RendererComponent {
 	public:
-		CommandBuffer(const DeviceManager &deviceManager);
+		explicit CommandBuffer(const DeviceManager &deviceManager);
 
 		void createMainCommandPool();
 		void createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const vk::Buffer &vertexBuffer,

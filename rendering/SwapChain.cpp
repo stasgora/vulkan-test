@@ -45,7 +45,7 @@ vk::SwapchainCreateInfoKHR vkr::SwapChain::createSwapChainInfo(const SwapChainSu
 void vkr::SwapChain::createImageViews() {
 	swapChainImageViews.reserve(swapChainImages.size());
 	for (int i = 0; i < swapChainImages.size(); ++i)
-		swapChainImageViews.push_back(ImageUtils::createImageView(device, swapChainImages[i], swapChainFormat));
+		swapChainImageViews.push_back(ImageUtils::createImageView(device, swapChainImages[i], swapChainFormat, vk::ImageAspectFlagBits::eColor));
 }
 
 vk::SurfaceFormatKHR vkr::SwapChain::chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> &availableFormats) {

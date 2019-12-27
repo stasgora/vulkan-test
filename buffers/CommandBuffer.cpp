@@ -19,8 +19,12 @@ void vkr::CommandBuffer::createCommandBuffers(const SwapChain &swapChain, const 
 			throw std::runtime_error("failed to begin recording command buffer!");
 		}
 		vk::ClearValue clearColor = { std::array<float, 4>{ 0.0f, 0.0f, 0.0f, 1.0f } };
+		std::array<vk::ClearValue, 2> clearValues = {};
+		clearValues[0].color = std::array<float, 4>{0.0f, 0.0f, 0.0f, 1.0f};
+		vk::ClearDepthStencilValue stencilValue(1.0f, 0);
+		clearValues[1].depthStencil = stencilValue;
 		vk::RenderPassBeginInfo renderPassInfo(pipeline.renderPass, pipeline.swapChainFramebuffers[i],
-		                                       vk::Rect2D({0, 0}, swapChain.swapChainExtent), 1, &clearColor);
+		                                       vk::Rect2D({0, 0}, swapChain.swapChainExtent), clearValues.size(), clearValues.data());
 		commandBuffers[i].beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
 		commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline.graphicsPipeline);
 

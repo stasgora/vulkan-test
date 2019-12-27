@@ -8,7 +8,7 @@
 namespace vkr {
 	class DescriptorSet : public RendererComponent {
 	public:
-		DescriptorSet(const DeviceManager &deviceManager);
+		explicit DescriptorSet(const DeviceManager &deviceManager);
 
 		void createDescriptorPool(uint32_t swapImageCount);
 		void createDescriptorSets(uint32_t swapImageCount, const std::vector<vk::Buffer> &uniformBuffers, const vkr::SampledTexture &texture);

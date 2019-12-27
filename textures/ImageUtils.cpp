@@ -3,9 +3,9 @@
 #include "TextureImage.h"
 #include "ImageUtils.h"
 
-vk::ImageView vkr::ImageUtils::createImageView(const vk::Device &device, const vk::Image &image, vk::Format format) {
+vk::ImageView vkr::ImageUtils::createImageView(const vk::Device &device, const vk::Image &image, vk::Format format, vk::ImageAspectFlags aspectFlags) {
 	vk::ImageViewCreateInfo viewInfo(vk::ImageViewCreateFlags(), image, vk::ImageViewType::e2D, format);
-	viewInfo.subresourceRange = {vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1};
+	viewInfo.subresourceRange = {aspectFlags, 0, 1, 0, 1};
 	try {
 		return device.createImageView(viewInfo);
 	} catch (vk::SystemError &err) {

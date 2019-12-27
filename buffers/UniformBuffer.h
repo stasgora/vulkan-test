@@ -10,7 +10,7 @@
 namespace vkr {
 	class UniformBuffer : public RendererComponent {
 	public:
-		UniformBuffer(const DeviceManager &deviceManager);
+		explicit UniformBuffer(const DeviceManager &deviceManager);
 
 		void createUniformBuffers(uint32_t swapImageCount);
 		void updateUniformBuffer(uint32_t imageIndex, const vk::Extent2D &extent);

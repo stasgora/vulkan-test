@@ -1,4 +1,5 @@
 #include "SampledTexture.h"
+#include "BaseImage.h"
 
 void vkr::SampledTexture::init() {
 	TextureImage::init();
