@@ -1,5 +1,5 @@
 #include "ImageUtils.h"
-#include "../libs/stb_image.h"
+#include "../../libs/stb_image.h"
 #include "BaseImage.h"
 
 void vkr::BaseImage::cleanup() {

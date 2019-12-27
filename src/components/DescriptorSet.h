@@ -3,7 +3,7 @@
 
 
 #include <vulkan/vulkan.hpp>
-#include "../textures/SampledTexture.h"
+#include "../image/SampledTexture.h"
 
 namespace vkr {
 	class DescriptorSet : public RendererComponent {

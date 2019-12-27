@@ -1,8 +1,8 @@
 #include "SwapChain.h"
 #include "../components/DeviceManager.h"
 #include "../components/VulkanStructs.h"
-#include "../textures/TextureImage.h"
-#include "../textures/ImageUtils.h"
+#include "../image/TextureImage.h"
+#include "../image/ImageUtils.h"
 
 void vkr::SwapChain::createSwapChain(const vk::SurfaceKHR &surface, const WindowSize size) {
 	SwapChainSupportDetails swapChainSupport = vkr::DeviceManager::querySwapChainSupport(deviceManager.physicalDevice, surface);

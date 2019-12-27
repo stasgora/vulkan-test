@@ -12,8 +12,8 @@
 #include "rendering/Renderer.h"
 #include "buffers/UniformBuffer.h"
 #include "components/DescriptorSet.h"
-#include "textures/SampledTexture.h"
-#include "textures/DepthImage.h"
+#include "image/SampledTexture.h"
+#include "image/DepthImage.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;

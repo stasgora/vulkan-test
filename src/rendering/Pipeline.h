@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include "../components/RendererComponent.h"
-#include "../textures/DepthImage.h"
+#include "../image/DepthImage.h"
 #include "SwapChain.h"
 
 namespace vkr {

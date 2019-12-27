@@ -1,5 +1,5 @@
 #include "TextureImage.h"
-#include "../libs/stb_image.h"
+#include "../../libs/stb_image.h"
 #include "../buffers/BufferUtils.h"
 #include "ImageUtils.h"
 #include "BaseImage.h"

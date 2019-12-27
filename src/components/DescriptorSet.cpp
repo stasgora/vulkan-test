@@ -1,6 +1,6 @@
 #include "DescriptorSet.h"
 #include "VulkanStructs.h"
-#include "../textures/SampledTexture.h"
+#include "../image/SampledTexture.h"
 
 void vkr::DescriptorSet::createDescriptorPool(uint32_t swapImageCount) {
 	std::array<vk::DescriptorPoolSize, 2> poolSizes = {};
