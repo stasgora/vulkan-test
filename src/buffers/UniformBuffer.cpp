@@ -24,7 +24,7 @@ void vkr::UniformBuffer::updateUniformBuffer(uint32_t imageIndex, const vk::Exte
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 	UniformBufferObject ubo = {}; // TODO Use push constants to pass the matrices instead
-	ubo.model = glm::rotate(glm::mat4(1), time * glm::radians(90.0f), glm::vec3(0, 0, 1));
+	ubo.model = glm::rotate(glm::mat4(1), time * glm::radians(45.0f), glm::vec3(0, 0, 1));
 	ubo.view = glm::lookAt(glm::vec3(2, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
 	ubo.proj = glm::perspective(glm::radians(45.0f), extent.width / (float) extent.height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
