@@ -47,8 +47,8 @@ void vkr::Pipeline::createRenderPass(const vk::Format &format) {
 }
 
 void vkr::Pipeline::createGraphicsPipeline(const vk::Extent2D &extent, const vk::DescriptorSetLayout &descriptorSetLayout) {
-	auto vertexShaderModule = createShaderModule(readFile("../shaders/vert.spv"), device);
-	auto fragmentShaderModule = createShaderModule(readFile("../shaders/frag.spv"), device);
+	auto vertexShaderModule = createShaderModule(readFile("shaders/vert.spv"), device);
+	auto fragmentShaderModule = createShaderModule(readFile("shaders/frag.spv"), device);
 
 	vk::PipelineShaderStageCreateInfo shaderStages[] = {
 			{ vk::PipelineShaderStageCreateFlags(), vk::ShaderStageFlagBits::eVertex, *vertexShaderModule, "main" },

@@ -5,7 +5,7 @@ Window::Window()
 : size({WIDTH, HEIGHT}),
   vertexBuffer(deviceManager, objModel.vertices, vk::BufferUsageFlagBits::eVertexBuffer),
   indexBuffer(deviceManager, objModel.indices, vk::BufferUsageFlagBits::eIndexBuffer),
-  textureImage(deviceManager, "../assets/chalet.jpg", vk::ImageLayout::eShaderReadOnlyOptimal),
+  textureImage(deviceManager, "assets/chalet.jpg", vk::ImageLayout::eShaderReadOnlyOptimal),
   depthImage(deviceManager),
   swapChain(deviceManager),
   pipeline(deviceManager),
@@ -13,7 +13,7 @@ Window::Window()
   uniformBuffer(deviceManager),
   commandBuffer(deviceManager),
   renderer(deviceManager),
-  objModel("../assets/chalet.obj") {}
+  objModel("assets/chalet.obj") {}
 
 Window::~Window() {
 	cleanup();
