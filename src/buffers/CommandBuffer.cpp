@@ -49,7 +49,7 @@ void vkr::CommandBuffer::createMainCommandPool() {
 }
 
 void vkr::CommandBuffer::cleanup() {
-	device.destroyCommandPool(commandPool);
+	device.destroyCommandPool(commandPool, nullptr);
 }
 
 void vkr::CommandBuffer::clearBuffers() {

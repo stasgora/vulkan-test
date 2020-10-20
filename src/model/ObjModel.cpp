@@ -18,16 +18,16 @@ void vkr::ObjModel::loadModel() {
 	for (const auto &shape : shapes) {
 		for (const auto &index : shape.mesh.indices) {
 			Vertex vertex = {
-					{
-							attrib.vertices[3 * index.vertex_index + 0],
-							attrib.vertices[3 * index.vertex_index + 1],
-							attrib.vertices[3 * index.vertex_index + 2],
-					},
-					{1, 1, 1},
-					{
-							attrib.texcoords[2 * index.texcoord_index + 0],
-							1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-					}
+				{
+					attrib.vertices[3 * index.vertex_index + 0],
+					attrib.vertices[3 * index.vertex_index + 1],
+					attrib.vertices[3 * index.vertex_index + 2],
+				},
+				{1, 1, 1},
+				{
+					attrib.texcoords[2 * index.texcoord_index + 0],
+					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+				}
 			};
 			if (!uniqueVertices.contains(vertex)) {
 				uniqueVertices[vertex] = vertices.size();

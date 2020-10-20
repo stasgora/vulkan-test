@@ -87,7 +87,7 @@ void vkr::Pipeline::createGraphicsPipeline(const vk::Extent2D &extent, const vk:
 			nullptr, &viewportState, &rasterizer, &multisampling, &depthStencil, &colorBlending,
 			nullptr, pipelineLayout, renderPass, 0, nullptr, -1);
 	try {
-		graphicsPipeline = device.createGraphicsPipeline(nullptr, pipelineInfo);
+		graphicsPipeline = device.createGraphicsPipeline(nullptr, pipelineInfo).value;
 	} catch (vk::SystemError &err) {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}

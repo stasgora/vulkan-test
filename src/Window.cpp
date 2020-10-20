@@ -121,7 +121,7 @@ void Window::cleanup() {
 	descriptorSet.cleanupLayout();
 	textureImage.cleanup();
 	vkr::BufferUtils::cleanupSingleUsageCommandPool(*deviceManager.device);
-	instance->destroySurfaceKHR(surface);
+	instance->destroySurfaceKHR(surface, nullptr);
 	debugLayer.cleanup(*instance);
 	glfwDestroyWindow(window);
 	glfwTerminate();
