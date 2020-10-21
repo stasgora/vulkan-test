@@ -116,11 +116,11 @@ vk::UniqueShaderModule vkr::Pipeline::createShaderModule(const std::vector<char>
 
 void vkr::Pipeline::cleanup() {
 	for (const auto &buffer : swapChainFramebuffers)
-		device.destroyFramebuffer(buffer);
+		device.destroyFramebuffer(buffer, nullptr);
 	swapChainFramebuffers.clear();
-	device.destroyPipeline(graphicsPipeline);
-	device.destroyPipelineLayout(pipelineLayout);
-	device.destroyRenderPass(renderPass);
+	device.destroyPipeline(graphicsPipeline, nullptr);
+	device.destroyPipelineLayout(pipelineLayout, nullptr);
+	device.destroyRenderPass(renderPass, nullptr);
 }
 
 vkr::Pipeline::Pipeline(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

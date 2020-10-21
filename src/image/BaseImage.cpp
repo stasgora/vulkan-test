@@ -3,9 +3,9 @@
 #include "BaseImage.h"
 
 void vkr::BaseImage::cleanup() {
-	device.destroyImageView(imageView);
-	device.destroyImage(image);
-	device.freeMemory(imageMemory);
+	device.destroyImageView(imageView, nullptr);
+	device.destroyImage(image, nullptr);
+	device.freeMemory(imageMemory, nullptr);
 }
 
 vkr::BaseImage::BaseImage(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

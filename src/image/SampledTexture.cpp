@@ -23,7 +23,7 @@ void vkr::SampledTexture::createTextureSampler() {
 
 void vkr::SampledTexture::cleanup() {
 	TextureImage::cleanup();
-	device.destroySampler(textureSampler);
+	device.destroySampler(textureSampler, nullptr);
 }
 
 vkr::SampledTexture::SampledTexture(const vkr::DeviceManager &deviceManager, std::string path, vk::ImageLayout layout) :

@@ -34,8 +34,8 @@ void vkr::UniformBuffer::updateUniformBuffer(uint32_t imageIndex, const vk::Exte
 
 void vkr::UniformBuffer::cleanup() {
 	for (int i = 0; i < uniformBuffers.size(); ++i) {
-		device.destroyBuffer(uniformBuffers[i]);
-		device.freeMemory(uniformBufferMemory[i]);
+		device.destroyBuffer(uniformBuffers[i], nullptr);
+		device.freeMemory(uniformBufferMemory[i], nullptr);
 	}
 }
 

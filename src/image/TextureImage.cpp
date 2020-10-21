@@ -32,8 +32,8 @@ void vkr::TextureImage::createTextureImage() {
 	ImageUtils::copyBufferToImage(deviceManager, stagingBuffer, image, texWidth, texHeight);
 	ImageUtils::transitionImageLayout(deviceManager, image, vk::Format::eR8G8B8A8Unorm, vk::ImageLayout::eTransferDstOptimal, layout);
 
-	device.destroyBuffer(stagingBuffer);
-	device.freeMemory(stagingBufferMemory);
+	device.destroyBuffer(stagingBuffer, nullptr);
+	device.freeMemory(stagingBufferMemory, nullptr);
 }
 
 void vkr::TextureImage::createTextureImageView() {

@@ -1,6 +1,5 @@
 #include "DescriptorSet.h"
 #include "VulkanStructs.h"
-#include "../image/SampledTexture.h"
 
 void vkr::DescriptorSet::createDescriptorPool(uint32_t swapImageCount) {
 	std::array<vk::DescriptorPoolSize, 2> poolSizes = {};
@@ -51,11 +50,11 @@ void vkr::DescriptorSet::createDescriptorSetLayout() {
 }
 
 void vkr::DescriptorSet::cleanup() {
-	device.destroyDescriptorPool(descriptorPool);
+	device.destroyDescriptorPool(descriptorPool, nullptr);
 }
 
 void vkr::DescriptorSet::cleanupLayout() {
-	device.destroyDescriptorSetLayout(descriptorSetLayout);
+	device.destroyDescriptorSetLayout(descriptorSetLayout, nullptr);
 }
 
 vkr::DescriptorSet::DescriptorSet(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

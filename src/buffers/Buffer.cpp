@@ -13,13 +13,13 @@ template<class T> void vkr::Buffer<T>::createDataBuffer() {
 	BufferUtils::createBuffer(deviceManager, bufferSize, bufferUsage, vk::MemoryPropertyFlagBits::eDeviceLocal, buffer, bufferMemory);
 	BufferUtils::copyBuffer(stagingBuffer, buffer, bufferSize, deviceManager);
 
-	device.destroyBuffer(stagingBuffer);
-	device.freeMemory(stagingBufferMemory);
+	device.destroyBuffer(stagingBuffer, nullptr);
+	device.freeMemory(stagingBufferMemory, nullptr);
 }
 
 template<class T> void vkr::Buffer<T>::cleanup() {
-	device.destroyBuffer(buffer);
-	device.freeMemory(bufferMemory);
+	device.destroyBuffer(buffer, nullptr);
+	device.freeMemory(bufferMemory, nullptr);
 }
 
 template<class T> vkr::Buffer<T>::Buffer(const vkr::DeviceManager &deviceManager, const std::vector<T> &data, const vk::BufferUsageFlagBits &usage):

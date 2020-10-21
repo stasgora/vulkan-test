@@ -66,9 +66,9 @@ bool vkr::Renderer::drawFrame(const SwapChain &swapChain,
 
 void vkr::Renderer::cleanup() {
 	for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-		device.destroySemaphore(imageAvailableSemaphores[i]);
-		device.destroySemaphore(renderFinishedSemaphores[i]);
-		device.destroyFence(inFlightFences[i]);
+		device.destroySemaphore(imageAvailableSemaphores[i], nullptr);
+		device.destroySemaphore(renderFinishedSemaphores[i], nullptr);
+		device.destroyFence(inFlightFences[i], nullptr);
 	}
 }
 

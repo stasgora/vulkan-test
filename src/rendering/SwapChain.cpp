@@ -74,10 +74,10 @@ vk::Extent2D vkr::SwapChain::chooseSwapExtent(const vk::SurfaceCapabilitiesKHR &
 
 void vkr::SwapChain::cleanup() {
 	for (const auto &imageView : swapChainImageViews)
-		device.destroyImageView(imageView);
+		device.destroyImageView(imageView, nullptr);
 	swapChainImageViews.clear();
 	swapChainImages.clear();
-	device.destroySwapchainKHR(swapChain);
+	device.destroySwapchainKHR(swapChain, nullptr);
 }
 
 vkr::SwapChain::SwapChain(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}

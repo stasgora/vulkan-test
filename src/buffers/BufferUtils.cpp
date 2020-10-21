@@ -68,5 +68,5 @@ void vkr::BufferUtils::copyBufferData(const vk::Device &device, vk::DeviceMemory
 }
 
 void vkr::BufferUtils::cleanupSingleUsageCommandPool(const vk::Device &device) {
-	device.destroyCommandPool(singleUsageCommandPool);
+	device.destroyCommandPool(singleUsageCommandPool, nullptr);
 }
