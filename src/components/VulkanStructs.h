@@ -30,16 +30,18 @@ namespace vkr {
 		glm::vec3 pos;
 		glm::vec3 color;
 		glm::vec2 texCoord;
+		glm::vec3 normal;
 
 		static vk::VertexInputBindingDescription getBindingDescription() {
 			return vk::VertexInputBindingDescription(0, sizeof(Vertex), vk::VertexInputRate::eVertex);
 		}
 
-		static std::array<vk::VertexInputAttributeDescription, 3> getAttributeDescriptions() {
+		static std::array<vk::VertexInputAttributeDescription, 4> getAttributeDescriptions() {
 			return {
 				vk::VertexInputAttributeDescription(0, 0, vk::Format::eR32G32B32Sfloat, offsetof(Vertex, pos)),
 				vk::VertexInputAttributeDescription(1, 0, vk::Format::eR32G32B32Sfloat, offsetof(Vertex, color)),
-				vk::VertexInputAttributeDescription(2, 0, vk::Format::eR32G32Sfloat, offsetof(Vertex, texCoord))
+				vk::VertexInputAttributeDescription(2, 0, vk::Format::eR32G32Sfloat, offsetof(Vertex, texCoord)),
+				vk::VertexInputAttributeDescription(3, 0, vk::Format::eR32G32B32Sfloat, offsetof(Vertex, normal))
 			};
 		}
 
@@ -52,6 +54,13 @@ namespace vkr {
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 proj;
+
+		glm::vec4 Light0Ambient;
+		glm::vec4 Light0Diffuse;
+		glm::vec4 MaterialAmbient;
+		glm::vec4 MaterialDiffuse;
+
+		glm::vec3 vLightPosition;
 	};
 
 	struct WindowSize {

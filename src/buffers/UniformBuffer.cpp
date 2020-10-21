@@ -25,9 +25,15 @@ void vkr::UniformBuffer::updateUniformBuffer(uint32_t imageIndex, const vk::Exte
 
 	UniformBufferObject ubo = {}; // TODO Use push constants to pass the matrices instead
 	ubo.model = glm::rotate(glm::mat4(1), time * glm::radians(45.0f), glm::vec3(0, 0, 1));
-	ubo.view = glm::lookAt(glm::vec3(2, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
-	ubo.proj = glm::perspective(glm::radians(45.0f), extent.width / (float) extent.height, 0.1f, 10.0f);
+	ubo.view = glm::lookAt(glm::vec3(5, 5, 0), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1));
+	ubo.proj = glm::perspective(glm::radians(45.0f), extent.width / (float) extent.height, 0.1f, 30.0f);
 	ubo.proj[1][1] *= -1;
+	ubo.Light0Ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+	ubo.Light0Diffuse = { 0.8f, 0.8f, 0.8f, 1.0f };
+	ubo.MaterialAmbient = { 1.0f, 1.0f, 1.0f, 1.0f };
+	ubo.MaterialDiffuse = { 0.1f, 0.1f, 1.0f, 1.0f };
+
+	ubo.vLightPosition = { -100.0f, 100.0f, 100.0f };
 
 	BufferUtils::copyBufferData(device, uniformBufferMemory[imageIndex], &ubo, sizeof(ubo));
 }

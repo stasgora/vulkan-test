@@ -8,12 +8,12 @@ Window::Window()
   textureImage(deviceManager, "assets/chalet.jpg", vk::ImageLayout::eShaderReadOnlyOptimal),
   depthImage(deviceManager),
   swapChain(deviceManager),
-  pipeline(deviceManager),
+  pipeline(deviceManager, "per_vertex"),
   descriptorSet(deviceManager),
   uniformBuffer(deviceManager),
   commandBuffer(deviceManager),
   renderer(deviceManager),
-  objModel("assets/chalet.obj") {}
+  objModel("assets/model.obj") {}
 
 Window::~Window() {
 	cleanup();

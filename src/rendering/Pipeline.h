@@ -12,7 +12,7 @@
 namespace vkr {
 	class Pipeline : public RendererComponent {
 	public:
-		explicit Pipeline(const DeviceManager &deviceManager);
+		explicit Pipeline(const vkr::DeviceManager &deviceManager, const std::string& shaderFile);
 
 		void createRenderPass(const vk::Format &format);
 		void createGraphicsPipeline(const vk::Extent2D &extent, const vk::DescriptorSetLayout &layout);
@@ -27,6 +27,7 @@ namespace vkr {
 		static vk::UniqueShaderModule createShaderModule(const std::vector<char> &code, const vk::Device &device);
 		static std::vector<char> readFile(const std::string &fileName);
 
+		std::string shaderFile;
 	};
 }
 

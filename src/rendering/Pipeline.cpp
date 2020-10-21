@@ -47,8 +47,8 @@ void vkr::Pipeline::createRenderPass(const vk::Format &format) {
 }
 
 void vkr::Pipeline::createGraphicsPipeline(const vk::Extent2D &extent, const vk::DescriptorSetLayout &descriptorSetLayout) {
-	auto vertexShaderModule = createShaderModule(readFile("shaders/vert.spv"), device);
-	auto fragmentShaderModule = createShaderModule(readFile("shaders/frag.spv"), device);
+	auto vertexShaderModule = createShaderModule(readFile("shaders/" + shaderFile + ".vert.spv"), device);
+	auto fragmentShaderModule = createShaderModule(readFile("shaders/" + shaderFile + ".frag.spv"), device);
 
 	vk::PipelineShaderStageCreateInfo shaderStages[] = {
 			{ vk::PipelineShaderStageCreateFlags(), vk::ShaderStageFlagBits::eVertex, *vertexShaderModule, "main" },
@@ -123,4 +123,4 @@ void vkr::Pipeline::cleanup() {
 	device.destroyRenderPass(renderPass, nullptr);
 }
 
-vkr::Pipeline::Pipeline(const vkr::DeviceManager &deviceManager) : RendererComponent(deviceManager) {}
+vkr::Pipeline::Pipeline(const vkr::DeviceManager &deviceManager, const std::string& shaderFile) : RendererComponent(deviceManager), shaderFile(shaderFile) {}
