@@ -7,23 +7,33 @@
 #include "../components/RendererComponent.h"
 
 namespace vkr {
-	template <class T> class Buffer : public RendererComponent {
+	class Buffer : public RendererComponent {
 	public:
-		Buffer(const DeviceManager &deviceManager, const std::vector<T> &data, const vk::BufferUsageFlagBits &usage);
+		Buffer(const DeviceManager &deviceManager, const vk::BufferUsageFlags &usage, const uint64_t size);
 
 		void createDataBuffer();
-		size_t getDataSize() const;
 		void cleanup() override;
+
+		template<typename T> uint64_t insertData(const std::vector<T> &data) {
+			uint64_t dataSize = sizeof(data[0]) * data.size();
+			BufferUtils::copyBufferData(device, stagingBufferMemory, data.data(), dataSize, offset);
+			BufferUtils::copyBuffer(stagingBuffer, buffer, dataSize, offset, deviceManager);
+			uint64_t prevOffset = offset;
+			offset += dataSize;
+			return prevOffset;
+		}
 
 		vk::Buffer buffer;
 	protected:
+		uint64_t offset = 0;
+		const uint64_t size;
+
 		vk::DeviceMemory bufferMemory;
-		const std::vector<T> &data;
-		const vk::BufferUsageFlagBits usage;
+		const vk::BufferUsageFlags usage;
+
+		vk::Buffer stagingBuffer;
+		vk::DeviceMemory stagingBufferMemory;
 	};
 }
-
-template class vkr::Buffer<vkr::Vertex>;
-template class vkr::Buffer<uint32_t>;
 
 #endif //TEST_BUFFER_H

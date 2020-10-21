@@ -4,9 +4,11 @@
 #include <utility>
 #include <unordered_map>
 
+uint64_t vkr::ObjModel::loadedIndicesCount = 0;
+
 vkr::ObjModel::ObjModel(std::string modelPath) : modelPath(std::move(modelPath)) {}
 
-void vkr::ObjModel::loadModel() {
+void vkr::ObjModel::loadModels(Buffer& buffer) {
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
@@ -40,5 +42,9 @@ void vkr::ObjModel::loadModel() {
 			}
 			indices.push_back(uniqueVertices[vertex]);
 		}
+		objects.push_back({loadedIndicesCount, indices.size() - loadedIndicesCount});
+		loadedIndicesCount = indices.size();
 	}
+	buffer.insertData(vertices);
+	indexOffset = buffer.insertData(indices);
 }

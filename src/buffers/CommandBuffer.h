@@ -6,6 +6,7 @@
 #include "../rendering/SwapChain.h"
 #include "../rendering/Pipeline.h"
 #include "Buffer.h"
+#include "../model/ObjModel.h"
 
 
 namespace vkr {
@@ -14,8 +15,8 @@ namespace vkr {
 		explicit CommandBuffer(const DeviceManager &deviceManager);
 
 		void createMainCommandPool();
-		void createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const Buffer<Vertex> &vertexBuffer,
-		                          const Buffer<uint32_t> &indexBuffer, const std::vector<vk::DescriptorSet> &descriptorSets);
+		void createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const Buffer &dataBuffer,
+							const std::vector<Object> &objects, uint32_t indexOffset, const std::vector<vk::DescriptorSet> &descriptorSets);
 		void cleanup() override;
 		void clearBuffers();
 

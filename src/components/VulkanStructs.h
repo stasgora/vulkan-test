@@ -26,6 +26,11 @@ namespace vkr {
 		std::vector<vk::PresentModeKHR> presentModes;
 	};
 
+	struct Object {
+		uint64_t indexBase;
+		uint64_t indexCount;
+	};
+
 	struct Vertex {
 		glm::vec3 pos;
 		glm::vec3 color;

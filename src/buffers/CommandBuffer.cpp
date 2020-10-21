@@ -2,8 +2,8 @@
 #include "../components/VulkanStructs.h"
 #include "../Window.h"
 
-void vkr::CommandBuffer::createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const Buffer<Vertex> &vertexBuffer,
-                                              const Buffer<uint32_t> &indexBuffer, const std::vector<vk::DescriptorSet> &descriptorSets) {
+void vkr::CommandBuffer::createCommandBuffers(const SwapChain &swapChain, const Pipeline &pipeline, const Buffer &dataBuffer,
+											  const std::vector<Object> &objects, uint32_t indexOffset, const std::vector<vk::DescriptorSet> &descriptorSets) {
 	commandBuffers.resize(pipeline.swapChainFramebuffers.size());
 	vk::CommandBufferAllocateInfo allocInfo(commandPool, vk::CommandBufferLevel::ePrimary, commandBuffers.size());
 	try {
@@ -28,13 +28,16 @@ void vkr::CommandBuffer::createCommandBuffers(const SwapChain &swapChain, const 
 		commandBuffers[i].beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
 		commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline.graphicsPipeline);
 
-		vk::Buffer vertexBuffers[] = {vertexBuffer.buffer};
+
+		vk::Buffer vertexBuffers[] = {dataBuffer.buffer};
 		vk::DeviceSize offsets[] = {0};
 		commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
-		commandBuffers[i].bindIndexBuffer(indexBuffer.buffer, 0, vk::IndexType::eUint32);
-		commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipeline.pipelineLayout,
-				0, 1, &descriptorSets[i], 0, nullptr);
-		commandBuffers[i].drawIndexed(indexBuffer.getDataSize(), 1, 0, 0, 0);
+		commandBuffers[i].bindIndexBuffer(dataBuffer.buffer, indexOffset, vk::IndexType::eUint32);
+		for (const auto &object : objects) {
+			commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipeline.pipelineLayout,
+			                                     0, 1, &descriptorSets[i], 0, nullptr);
+			commandBuffers[i].drawIndexed(object.indexCount, 1, 0, object.indexBase, 0);
+		}
 		commandBuffers[i].endRenderPass();
 		try {
 			commandBuffers[i].end();

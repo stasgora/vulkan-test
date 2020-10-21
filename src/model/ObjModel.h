@@ -5,17 +5,22 @@
 #include <string>
 #include <vector>
 #include "../components/VulkanStructs.h"
+#include "../buffers/Buffer.h"
 
 namespace vkr {
 	class ObjModel {
 	public:
 		ObjModel(std::string modelPath);
 
-		void loadModel();
+		void loadModels(Buffer& buffer);
+
+		std::vector<Object> objects;
+		uint32_t indexOffset;
+	private:
+		static uint64_t loadedIndicesCount;
 
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
-	private:
 		std::string modelPath;
 	};
 }

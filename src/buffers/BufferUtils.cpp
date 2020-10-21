@@ -27,10 +27,10 @@ void vkr::BufferUtils::createSingleUsageCommandPool(const vkr::DeviceManager &de
 	vkr::CommandBuffer::createCommandPool(singleUsageCommandPool, vk::CommandPoolCreateFlagBits::eTransient, *deviceManager.device, deviceManager.queueFamilyIndices);
 }
 
-void vkr::BufferUtils::copyBuffer(const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, vk::DeviceSize size, const DeviceManager &deviceManager) {
+void vkr::BufferUtils::copyBuffer(const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, vk::DeviceSize size, const unsigned long offset, const DeviceManager &deviceManager) {
 	const vk::Device &device = *deviceManager.device;
 	vk::CommandBuffer commandBuffer = createSingleUsageCommandBuffer(device);
-	vk::BufferCopy copyRegion(0, 0, size);
+	vk::BufferCopy copyRegion(offset, offset, size);
 	commandBuffer.copyBuffer(srcBuffer, dstBuffer, 1, &copyRegion);
 	endSingleUsageCommandBuffer(deviceManager, commandBuffer);
 }
@@ -61,8 +61,8 @@ uint32_t vkr::BufferUtils::findMemoryType(uint32_t typeFilter, const vk::MemoryP
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void vkr::BufferUtils::copyBufferData(const vk::Device &device, vk::DeviceMemory &bufferMemory, const void *data, const size_t size) {
-	void* bufferData = device.mapMemory(bufferMemory, 0, size); //TODO use VulkanMemoryAllocator to allocate memory
+void vkr::BufferUtils::copyBufferData(const vk::Device &device, vk::DeviceMemory &bufferMemory, const void *data, const uint64_t size, const uint64_t offset) {
+	void* bufferData = device.mapMemory(bufferMemory, offset, size); //TODO use VulkanMemoryAllocator to allocate memory
 	memcpy(bufferData, data, size);
 	device.unmapMemory(bufferMemory);
 }

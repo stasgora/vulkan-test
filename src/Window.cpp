@@ -3,8 +3,7 @@
 
 Window::Window()
 : size({WIDTH, HEIGHT}),
-  vertexBuffer(deviceManager, objModel.vertices, vk::BufferUsageFlagBits::eVertexBuffer),
-  indexBuffer(deviceManager, objModel.indices, vk::BufferUsageFlagBits::eIndexBuffer),
+  dataBuffer(deviceManager, vk::BufferUsageFlagBits::eVertexBuffer | vk::BufferUsageFlagBits::eIndexBuffer, 1024 * 1024),
   textureImage(deviceManager, "assets/chalet.jpg", vk::ImageLayout::eShaderReadOnlyOptimal),
   depthImage(deviceManager),
   swapChain(deviceManager),
@@ -13,7 +12,7 @@ Window::Window()
   uniformBuffer(deviceManager),
   commandBuffer(deviceManager),
   renderer(deviceManager),
-  objModel("assets/model.obj") {}
+  objFile("assets/model.obj") {}
 
 Window::~Window() {
 	cleanup();
@@ -39,9 +38,8 @@ void Window::init() {
 	vkr::BufferUtils::createSingleUsageCommandPool(deviceManager);
 	commandBuffer.createMainCommandPool();
 	textureImage.init();
-	objModel.loadModel();
-	vertexBuffer.createDataBuffer();
-	indexBuffer.createDataBuffer();
+	dataBuffer.createDataBuffer();
+	objFile.loadModels(dataBuffer);
 	descriptorSet.createDescriptorSetLayout();
 	sizeDependentWindowSetup();
 	renderer.setupRendering(swapChain.swapChainImages.size());
@@ -65,7 +63,7 @@ void Window::sizeDependentWindowSetup(bool firstTime) {
 	uniformBuffer.createUniformBuffers(swapChain.swapChainImages.size());
 	descriptorSet.createDescriptorPool(swapChain.swapChainImages.size());
 	descriptorSet.createDescriptorSets(swapChain.swapChainImages.size(), uniformBuffer.uniformBuffers, textureImage);
-	commandBuffer.createCommandBuffers(swapChain, pipeline, vertexBuffer, indexBuffer, descriptorSet.descriptorSets);
+	commandBuffer.createCommandBuffers(swapChain, pipeline, dataBuffer, objFile.objects, objFile.indexOffset, descriptorSet.descriptorSets);
 }
 
 void Window::createSurface() {
@@ -116,8 +114,7 @@ void Window::cleanup() {
 
 	renderer.cleanup();
 	commandBuffer.cleanup();
-	vertexBuffer.cleanup();
-	indexBuffer.cleanup();
+	dataBuffer.cleanup();
 	descriptorSet.cleanupLayout();
 	textureImage.cleanup();
 	vkr::BufferUtils::cleanupSingleUsageCommandPool(*deviceManager.device);

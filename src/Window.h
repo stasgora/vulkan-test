@@ -45,15 +45,14 @@ private:
 	vk::SurfaceKHR surface;
 	vkr::SampledTexture textureImage;
 	vkr::DepthImage depthImage;
-	vkr::ObjModel objModel;
 
 	vkr::DescriptorSet descriptorSet;
 	vkr::Pipeline pipeline;
 	vkr::Renderer renderer;
 
 	vkr::CommandBuffer commandBuffer;
-	vkr::Buffer<vkr::Vertex> vertexBuffer; //TODO should use a single buffer with offsets for better performance
-	vkr::Buffer<uint32_t> indexBuffer;
+	vkr::Buffer dataBuffer;
+	vkr::ObjModel objFile;
 	vkr::UniformBuffer uniformBuffer;
 
 	vkr::DeviceManager deviceManager;
