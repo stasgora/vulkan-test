@@ -18,6 +18,7 @@ namespace vkr {
 		uint32_t indexOffset;
 	private:
 		static uint64_t loadedIndicesCount;
+		static uint64_t loadedVerticesCount;
 
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;

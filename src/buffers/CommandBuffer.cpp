@@ -36,7 +36,7 @@ void vkr::CommandBuffer::createCommandBuffers(const SwapChain &swapChain, const 
 		for (const auto &object : objects) {
 			commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipeline.pipelineLayout,
 			                                     0, 1, &descriptorSets[i], 0, nullptr);
-			commandBuffers[i].drawIndexed(object.indexCount, 1, 0, object.indexBase, 0);
+			commandBuffers[i].drawIndexed(object.indexCount, 1, object.indexBase, object.vertexBase, 0);
 		}
 		commandBuffers[i].endRenderPass();
 		try {

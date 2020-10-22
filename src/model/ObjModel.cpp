@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 uint64_t vkr::ObjModel::loadedIndicesCount = 0;
+uint64_t vkr::ObjModel::loadedVerticesCount = 0;
 
 vkr::ObjModel::ObjModel(std::string modelPath) : modelPath(std::move(modelPath)) {}
 
@@ -42,8 +43,9 @@ void vkr::ObjModel::loadModels(Buffer& buffer) {
 			}
 			indices.push_back(uniqueVertices[vertex]);
 		}
-		objects.push_back({loadedIndicesCount, indices.size() - loadedIndicesCount});
+		objects.push_back({loadedIndicesCount, 0, indices.size() - loadedIndicesCount});
 		loadedIndicesCount = indices.size();
+		loadedVerticesCount = vertices.size();
 	}
 	buffer.insertData(vertices);
 	indexOffset = buffer.insertData(indices);

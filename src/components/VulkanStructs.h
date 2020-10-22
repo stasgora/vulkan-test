@@ -28,6 +28,7 @@ namespace vkr {
 
 	struct Object {
 		uint64_t indexBase;
+		uint64_t vertexBase;
 		uint64_t indexCount;
 	};
 
